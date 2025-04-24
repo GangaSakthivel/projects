@@ -1,5 +1,6 @@
 package com.example.BookManagementSpring.DTO;
 
+import com.example.BookManagementSpring.model.Book;
 import com.example.BookManagementSpring.model.BookStatus;
 
 import java.time.LocalDate;
@@ -12,11 +13,12 @@ public class BookResponseDTO {
     private String language;
     private Double price;
     private BookStatus status;
+    private Long author_id;
 
     public BookResponseDTO() {
     }
 
-    public BookResponseDTO(Long id, String title, String isbn, LocalDate publicationDate, String language, Double price, BookStatus status) {
+    public BookResponseDTO(Long id, String title, String isbn, LocalDate publicationDate, String language, Double price, BookStatus status, Long author_id) {
         this.id = id;
         this.title = title;
         this.isbn = isbn;
@@ -24,6 +26,7 @@ public class BookResponseDTO {
         this.language = language;
         this.price = price;
         this.status = status;
+        this.author_id = author_id;
     }
 
     public Long getId() {
@@ -81,4 +84,13 @@ public class BookResponseDTO {
     public void setStatus(BookStatus status) {
         this.status = status;
     }
+
+    public Long getAuthor_id() {
+        return author_id;
+    }
+
+    public void setAuthor_id(Long author_id) {
+        this.author_id = author_id;
+    }
+
 }
