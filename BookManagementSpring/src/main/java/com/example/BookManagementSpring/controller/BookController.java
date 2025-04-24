@@ -1,21 +1,16 @@
 package com.example.BookManagementSpring.controller;
 
 
-import com.example.BookManagementSpring.DTO.AuthorResponseDTO;
 import com.example.BookManagementSpring.DTO.BookRequestDTO;
 import com.example.BookManagementSpring.DTO.BookResponseDTO;
-import com.example.BookManagementSpring.model.Book;
-import com.example.BookManagementSpring.repository.BookRepository;
 import com.example.BookManagementSpring.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("books")
@@ -34,6 +29,25 @@ public class BookController {
     public ResponseEntity<List<BookResponseDTO>> getAllBooks() {
         List<BookResponseDTO> books = bookService.getAllBooks();
         return ResponseEntity.ok(books);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookResponseDTO> getBookById(@PathVariable Long id){
+        BookResponseDTO books = bookService.getBookById(id);
+        return ResponseEntity.ok(books);
+    }
+
+
+    @PutMapping("{id}")
+    public ResponseEntity<BookResponseDTO> updateBook(@PathVariable Long id, @RequestBody BookRequestDTO bookRequestDTO){
+        BookResponseDTO updateBook = bookService.updateBook(id, bookRequestDTO);
+        return ResponseEntity.ok(updateBook);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteBook(@PathVariable Long id){
+        bookService.deleteBook(id);
+        return ResponseEntity.ok("Book with the " + id + " was deleted successfully.");
     }
 
 

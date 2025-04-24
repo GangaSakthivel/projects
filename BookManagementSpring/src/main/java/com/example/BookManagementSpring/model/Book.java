@@ -30,7 +30,7 @@ public class Book {
     @NotNull
     private Double price;
 
-    @Enumerated(EnumType.STRING) //(not needed for boolean type enums)
+    @Enumerated(EnumType.STRING)
     private BookStatus status;
 
     @ManyToOne

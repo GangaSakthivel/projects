@@ -21,11 +21,14 @@ public class Author {
     private String nationality;
     @NotBlank
     private String biography;
-    //@Enumerated(EnumType.STRING)
+    //@Enumerated(EnumType.STRING)//not needed for boolean types
     private Boolean VerificationStatus;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
+
+//    @OneToMany(fetch = FetchType.EAGER)
+//    private List<Book> books;
 
     public Long getId() {
         return id;
