@@ -3,6 +3,7 @@ package com.example.BookManagementSpring.controller;
 
 import com.example.BookManagementSpring.DTO.AuthorRequestDTO;
 import com.example.BookManagementSpring.DTO.AuthorResponseDTO;
+import com.example.BookManagementSpring.DTO.AuthorSummaryDTO;
 import com.example.BookManagementSpring.exception.DuplicateAuthorException;
 import com.example.BookManagementSpring.service.AuthorService;
 import jakarta.validation.Valid;
@@ -58,6 +59,16 @@ public class AuthorController {
         return ResponseEntity.ok("Deleted successfully");
 
     }
+
+
+    @GetMapping("summary/{fullName}")
+    public ResponseEntity<AuthorSummaryDTO> getBookCount(@PathVariable String fullName){
+        AuthorSummaryDTO summary = authorService.getBookCount(fullName);
+        return ResponseEntity.ok(summary);
+
+    }
+
+
 
 }
 

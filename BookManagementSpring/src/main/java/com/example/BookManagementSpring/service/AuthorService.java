@@ -2,9 +2,11 @@ package com.example.BookManagementSpring.service;
 
 import com.example.BookManagementSpring.DTO.AuthorRequestDTO;
 import com.example.BookManagementSpring.DTO.AuthorResponseDTO;
+import com.example.BookManagementSpring.DTO.AuthorSummaryDTO;
 import com.example.BookManagementSpring.exception.AuthorNotFoundException;
 import com.example.BookManagementSpring.exception.ResourceNotFoundException;
 import com.example.BookManagementSpring.model.Author;
+import com.example.BookManagementSpring.model.Book;
 import com.example.BookManagementSpring.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,8 @@ public class AuthorService {
         //for the result its response for that we have to save it in response
         //request -> entity -> to response
 
+        //request to entity and then save details in repository then to convert as response
+
         return new AuthorResponseDTO(
                 savedAuthor.getId(),
                 savedAuthor.getFullName(),
@@ -45,6 +49,8 @@ public class AuthorService {
                 savedAuthor.getEmail(),
                 savedAuthor.getVerificationStatus()
         );
+
+
     }
 
 
@@ -65,6 +71,7 @@ public class AuthorService {
 
         return authorResponseDTOS;
     }
+
 
     public AuthorResponseDTO getAuthorById(Long id) {
         // Fetch the author by ID from the repository
@@ -116,5 +123,23 @@ public class AuthorService {
             throw new AuthorNotFoundException("Author with ID " + id + " not found");
         }
         authorRepository.deleteById(id);
+    }
+
+    public AuthorSummaryDTO getBookCount(String fullName) {
+        Author author = authorRepository.findByFullName(fullName)
+                .orElseThrow(() -> new RuntimeException("Author not found"));
+
+        List<Book> books = author.getBooks();
+
+        List<String> bookTitles = books.stream()
+                .map(Book::getTitle)
+                .collect(Collectors.toList());
+
+        AuthorSummaryDTO dto = new AuthorSummaryDTO();
+        dto.setFullName(author.getFullName());
+        dto.setBookCount(bookTitles.size());
+        dto.setBookTitles(bookTitles);
+
+        return dto;
     }
 }

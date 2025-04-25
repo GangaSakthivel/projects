@@ -12,8 +12,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class AuthorRequestDTO {
     @NotBlank(message = "Full name is mandatory")
     @Size(min = 2, max = 100)
