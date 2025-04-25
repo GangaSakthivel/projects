@@ -19,6 +19,7 @@ public class Book {
     private String title;
 
     @NotBlank
+    @Column(unique = true)
     private String isbn;
 
     @NotNull

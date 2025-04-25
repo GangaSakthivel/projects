@@ -1,6 +1,8 @@
 package com.example.BookManagementSpring.DTO;
 
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -14,16 +16,21 @@ public class AuthorRequestDTO {
     @NotBlank(message = "Biography is mandatory")
     @Size(min = 10, max = 2000)
     private String biography;
+    @NotBlank
+    @Email
+    @Column(unique = true)
+    private String email;
     //@NotBlank since its a boolean we cannot use @notblank its works only on strings
     private Boolean VerificationStatus;
 
     public AuthorRequestDTO() {
     }
 
-    public AuthorRequestDTO(String fullName, String nationality, String biography, Boolean verificationStatus) {
+    public AuthorRequestDTO(String fullName, String nationality, String biography, String email, Boolean verificationStatus) {
         this.fullName = fullName;
         this.nationality = nationality;
         this.biography = biography;
+        this.email = email;
         VerificationStatus = verificationStatus;
     }
 
@@ -49,6 +56,14 @@ public class AuthorRequestDTO {
 
     public void setBiography(String biography) {
         this.biography = biography;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Boolean getVerificationStatus() {

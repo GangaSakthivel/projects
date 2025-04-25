@@ -13,7 +13,8 @@ public class BookResponseDTO {
     private String language;
     private Double price;
     private BookStatus status;
-    private Long author_id;
+   private Long author_id; //// Just the ID, not full author info
+    //private AuthorResponseDTO authorResponseDTO;
 
     public BookResponseDTO() {
     }

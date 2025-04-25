@@ -6,16 +6,18 @@ public class AuthorResponseDTO {
     private String fullName;
     private String nationality;
     private String biography;
+    private String email;
     private Boolean verificationStatus;
 
     public AuthorResponseDTO() {
     }
 
-    public AuthorResponseDTO(Long id, String fullName, String nationality, String biography, Boolean verificationStatus) {
+    public AuthorResponseDTO(Long id, String fullName, String nationality, String biography, String email, Boolean verificationStatus) {
         this.id = id;
         this.fullName = fullName;
         this.nationality = nationality;
         this.biography = biography;
+        this.email = email;
         this.verificationStatus = verificationStatus;
     }
 
@@ -49,6 +51,14 @@ public class AuthorResponseDTO {
 
     public void setBiography(String biography) {
         this.biography = biography;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Boolean getVerificationStatus() {

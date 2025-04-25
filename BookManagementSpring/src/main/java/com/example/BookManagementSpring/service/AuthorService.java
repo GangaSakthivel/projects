@@ -21,15 +21,16 @@ public class AuthorService {
 
     public AuthorResponseDTO createAuthor(AuthorRequestDTO authorRequestDTO) {
 
-        //converting authorrequest dto to author entity
+        //converting author request dto to author entity
         Author author = new Author();
         author.setFullName(authorRequestDTO.getFullName());
         author.setNationality(authorRequestDTO.getNationality());
         author.setBiography(authorRequestDTO.getBiography());
+        author.setEmail(authorRequestDTO.getEmail());
         author.setVerificationStatus(authorRequestDTO.getVerificationStatus()
         );
 
-        Author savedAuthor = authorRepository.save(author);
+        Author savedAuthor = authorRepository.save(author); //saving details in the author repository
 
         //converting the saved author to response entity
 
@@ -38,6 +39,7 @@ public class AuthorService {
                 savedAuthor.getFullName(),
                 savedAuthor.getNationality(),
                 savedAuthor.getBiography(),
+                savedAuthor.getEmail(),
                 savedAuthor.getVerificationStatus()
         );
     }
@@ -93,7 +95,8 @@ public class AuthorService {
                 updatedAuthor.getFullName(),
                 updatedAuthor.getNationality(),
                 updatedAuthor.getBiography(),
-                updatedAuthor.getVerificationStatus()
+                updatedAuthor.getVerificationStatus(),
+                updatedAuthor.g
         );
     }
 

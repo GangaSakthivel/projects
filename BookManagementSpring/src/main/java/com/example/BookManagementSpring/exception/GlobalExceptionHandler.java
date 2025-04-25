@@ -10,17 +10,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateAuthorException.class)
     public ResponseEntity<String> handleDuplicateAuthor(DuplicateAuthorException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT); // 409
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT); // 409
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(AuthorNotFoundException.class)
     public ResponseEntity<String> handleAuthorNotFound(AuthorNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT); // 409
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
 }

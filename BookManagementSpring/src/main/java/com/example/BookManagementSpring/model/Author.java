@@ -2,11 +2,16 @@ package com.example.BookManagementSpring.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "author")
 public class Author {
@@ -24,57 +29,15 @@ public class Author {
     //@Enumerated(EnumType.STRING)//not needed for boolean types
     private Boolean VerificationStatus;
 
+    @NotBlank
+    @Email
+    @Column(unique = true)
+    private String email;
+
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
 
 //    @OneToMany(fetch = FetchType.EAGER)
 //    private List<Book> books;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getNationality() {
-        return nationality;
-    }
-
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
-    public String getBiography() {
-        return biography;
-    }
-
-    public void setBiography(String biography) {
-        this.biography = biography;
-    }
-
-    public Boolean getVerificationStatus() {
-        return VerificationStatus;
-    }
-
-    public void setVerificationStatus(Boolean verificationStatus) {
-        VerificationStatus = verificationStatus;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
 }
