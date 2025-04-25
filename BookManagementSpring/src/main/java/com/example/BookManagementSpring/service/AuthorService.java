@@ -21,7 +21,8 @@ public class AuthorService {
 
     public AuthorResponseDTO createAuthor(AuthorRequestDTO authorRequestDTO) {
 
-        //converting author request dto to author entity
+        //converting author request dto to author entity (cause entity is the one that communicates with the db not dto so we have to
+        //convert request dto to entity then save it in db
         Author author = new Author();
         author.setFullName(authorRequestDTO.getFullName());
         author.setNationality(authorRequestDTO.getNationality());
@@ -33,6 +34,8 @@ public class AuthorService {
         Author savedAuthor = authorRepository.save(author); //saving details in the author repository
 
         //converting the saved author to response entity
+        //for the result its response for that we have to save it in response
+        //request -> entity -> to response
 
         return new AuthorResponseDTO(
                 savedAuthor.getId(),
@@ -44,6 +47,8 @@ public class AuthorService {
         );
     }
 
+
+    //for listing the authors we have in db
     public List<AuthorResponseDTO> getAllAuthors(){
         List<Author> authors = authorRepository.findAll();
 
@@ -53,6 +58,7 @@ public class AuthorService {
                         author.getFullName(),
                         author.getNationality(),
                         author.getBiography(),
+                        author.getEmail(),
                         author.getVerificationStatus()
                 )).collect(Collectors.toList());
 
@@ -71,10 +77,13 @@ public class AuthorService {
                 author.getFullName(),
                 author.getNationality(),
                 author.getBiography(),
+                author.getEmail(),
                 author.getVerificationStatus()
         );
     }
 
+
+    //for updating
     public AuthorResponseDTO updateAuthor(Long id, AuthorRequestDTO authorRequestDTO) {
         // Step 1: Fetch the existing author from the database
         Author existingAuthor = authorRepository.findById(id)
@@ -84,6 +93,7 @@ public class AuthorService {
         existingAuthor.setFullName(authorRequestDTO.getFullName());
         existingAuthor.setNationality(authorRequestDTO.getNationality());
         existingAuthor.setBiography(authorRequestDTO.getBiography());
+        existingAuthor.setEmail(authorRequestDTO.getEmail());
         existingAuthor.setVerificationStatus(authorRequestDTO.getVerificationStatus());
 
         // Step 3: Save the updated author
@@ -95,8 +105,8 @@ public class AuthorService {
                 updatedAuthor.getFullName(),
                 updatedAuthor.getNationality(),
                 updatedAuthor.getBiography(),
-                updatedAuthor.getVerificationStatus(),
-                updatedAuthor.g
+                updatedAuthor.getEmail(),
+                updatedAuthor.getVerificationStatus()
         );
     }
 

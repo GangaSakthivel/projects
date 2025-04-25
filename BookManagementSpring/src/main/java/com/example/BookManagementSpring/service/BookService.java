@@ -1,6 +1,7 @@
 package com.example.BookManagementSpring.service;
 
 
+import com.example.BookManagementSpring.DTO.AuthorResponseDTO;
 import com.example.BookManagementSpring.DTO.BookRequestDTO;
 import com.example.BookManagementSpring.DTO.BookResponseDTO;
 import com.example.BookManagementSpring.exception.AuthorNotFoundException;
@@ -26,8 +27,11 @@ public class BookService {
     private AuthorRepository authorRepository;
 
 
+
     public BookResponseDTO createBooks(BookRequestDTO bookRequestDTO) {
-        //convert request to entity
+        Author author = authorRepository.findById(bookRequestDTO.getAuthor_id())
+                .orElseThrow(()-> new RuntimeException("Author not found"));
+
         Book book = new Book();
         book.setTitle(bookRequestDTO.getTitle());
         book.setIsbn(bookRequestDTO.getIsbn());
@@ -35,16 +39,10 @@ public class BookService {
         book.setLanguage(bookRequestDTO.getLanguage());
         book.setPrice(bookRequestDTO.getPrice());
         book.setStatus(bookRequestDTO.getStatus());
-
-        // Fetch author using author_id
-        Author author = authorRepository.findById(bookRequestDTO.getAuthor_id())
-                .orElseThrow(() -> new AuthorNotFoundException("Author not found with ID: " + bookRequestDTO.getAuthor_id()));
-
         book.setAuthor(author);
 
         Book savedBook = bookRepository.save(book);
 
-        // Convert Entity to Response DTO
         BookResponseDTO responseDTO = new BookResponseDTO();
         responseDTO.setId(savedBook.getId());
         responseDTO.setTitle(savedBook.getTitle());
@@ -53,18 +51,39 @@ public class BookService {
         responseDTO.setLanguage(savedBook.getLanguage());
         responseDTO.setPrice(savedBook.getPrice());
         responseDTO.setStatus(savedBook.getStatus());
-        responseDTO.setAuthor_id(savedBook.getAuthor().getId());
 
+        AuthorResponseDTO authorResponseDTO = new AuthorResponseDTO();
+        authorResponseDTO.setId(savedBook.getAuthor().getId());
+        authorResponseDTO.setFullName(savedBook.getAuthor().getFullName());
+        authorResponseDTO.setNationality(savedBook.getAuthor().getNationality());
+        authorResponseDTO.setBiography(savedBook.getAuthor().getBiography());
+        authorResponseDTO.setEmail(savedBook.getAuthor().getEmail());
+
+        responseDTO.setAuthor(authorResponseDTO);
         return responseDTO;
+
     }
 
-        public List<BookResponseDTO> getAllBooks() {
-            // Fetch all books from the repository
-            List<Book> books = bookRepository.findAll();
+    public List<BookResponseDTO> getAllBooks() {
+        // Fetch all books from the repository
+        List<Book> books = bookRepository.findAll();
 
-            // Map the list of Book entities to a list of BookResponseDTOs
-            List<BookResponseDTO> bookResponseDTOs = books.stream()
-                    .map(book -> new BookResponseDTO(
+        // Map the list of Book entities to a list of BookResponseDTOs
+        return books.stream()
+                .map(book -> {
+                    AuthorResponseDTO authorDTO = null;
+                    if (book.getAuthor() != null) {
+                        authorDTO = new AuthorResponseDTO(
+                                book.getAuthor().getId(),
+                                book.getAuthor().getFullName(),
+                                book.getAuthor().getNationality(),
+                                book.getAuthor().getBiography(),
+                                book.getAuthor().getEmail(),
+                                book.getAuthor().getVerificationStatus()
+                        );
+                    }
+
+                    return new BookResponseDTO(
                             book.getId(),
                             book.getTitle(),
                             book.getIsbn(),
@@ -72,17 +91,19 @@ public class BookService {
                             book.getLanguage(),
                             book.getPrice(),
                             book.getStatus(),
-                            book.getAuthor() != null ? book.getAuthor().getId() : null))  // Ensure the author is not null
-                    .collect(Collectors.toList());
-            return bookResponseDTOs;  // Return the list of DTOs
-        }
+                            null //just books alone needs to be listed out
+                    );
+                })
+                .collect(Collectors.toList());
+    }
 
     public BookResponseDTO getBookById(Long id) {
-
+        // Fetch the book from the repository using the ID
         Book book = bookRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Book not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
-        return new BookResponseDTO(
+        // Map the Book entity to a BookResponseDTO
+        BookResponseDTO bookResponseDTO = new BookResponseDTO(
                 book.getId(),
                 book.getTitle(),
                 book.getIsbn(),
@@ -90,15 +111,24 @@ public class BookService {
                 book.getLanguage(),
                 book.getPrice(),
                 book.getStatus(),
-                book.getId()
+                book.getAuthor() != null ? new AuthorResponseDTO(
+                        book.getAuthor().getId(),
+                        book.getAuthor().getFullName(),
+                        book.getAuthor().getNationality(),
+                        book.getAuthor().getBiography(),
+                        book.getAuthor().getEmail(),
+                        book.getAuthor().getVerificationStatus()
+                ) : null // If the author is null, return null for the author details
         );
 
+        return bookResponseDTO;
     }
 
-    public BookResponseDTO updateBook(Long id, BookRequestDTO bookRequestDTO) {
+    public Book updateBook(Long id, BookRequestDTO bookRequestDTO) {
         Book existingBook = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
+        // Update book fields only
         existingBook.setTitle(bookRequestDTO.getTitle());
         existingBook.setIsbn(bookRequestDTO.getIsbn());
         existingBook.setPublicationDate(bookRequestDTO.getPublicationDate());
@@ -106,28 +136,21 @@ public class BookService {
         existingBook.setPrice(bookRequestDTO.getPrice());
         existingBook.setStatus(bookRequestDTO.getStatus());
 
-        Author author = authorRepository.findById(bookRequestDTO.getAuthor_id())
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found with id " + bookRequestDTO.getAuthor_id()));
-        existingBook.setAuthor(author);
-
-        Book updatedBook = bookRepository.save(existingBook);
-
-        BookResponseDTO responseDTO = new BookResponseDTO();
-        responseDTO.setId(updatedBook.getId());
-        responseDTO.setTitle(updatedBook.getTitle());
-        responseDTO.setIsbn(updatedBook.getIsbn());
-        responseDTO.setPublicationDate(updatedBook.getPublicationDate());
-        responseDTO.setLanguage(updatedBook.getLanguage());
-        responseDTO.setPrice(updatedBook.getPrice());
-        responseDTO.setStatus(updatedBook.getStatus());
-        responseDTO.setAuthor_id(updatedBook.getAuthor().getId());
-
-        return responseDTO;
+        // DO NOT update author
+        return bookRepository.save(existingBook);
     }
-
 
     public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with ID: " + id));
+        bookRepository.delete(book);
     }
+
+
+
+
+
+
+
 }
 

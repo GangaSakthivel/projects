@@ -35,7 +35,7 @@ public class Book {
     private BookStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")// the Book entity is linked to an Author through author_id.
+    @JoinColumn(name = "author_id", referencedColumnName = "id")// the Book entity is linked to an Author through author_id.
     private Author author;
 
     //In the books table, there will be a foreign key column called author_id.

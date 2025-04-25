@@ -13,13 +13,12 @@ public class BookResponseDTO {
     private String language;
     private Double price;
     private BookStatus status;
-   private Long author_id; //// Just the ID, not full author info
-    //private AuthorResponseDTO authorResponseDTO;
+    private AuthorResponseDTO author;
 
     public BookResponseDTO() {
     }
 
-    public BookResponseDTO(Long id, String title, String isbn, LocalDate publicationDate, String language, Double price, BookStatus status, Long author_id) {
+    public BookResponseDTO(Long id, String title, String isbn, LocalDate publicationDate, String language, Double price, BookStatus status, AuthorResponseDTO author) {
         this.id = id;
         this.title = title;
         this.isbn = isbn;
@@ -27,7 +26,7 @@ public class BookResponseDTO {
         this.language = language;
         this.price = price;
         this.status = status;
-        this.author_id = author_id;
+        this.author = author;
     }
 
     public Long getId() {
@@ -86,12 +85,12 @@ public class BookResponseDTO {
         this.status = status;
     }
 
-    public Long getAuthor_id() {
-        return author_id;
+    public AuthorResponseDTO getAuthor() {
+        return author;
     }
 
-    public void setAuthor_id(Long author_id) {
-        this.author_id = author_id;
+    public void setAuthor(AuthorResponseDTO author) {
+        this.author = author;
     }
-
 }
+

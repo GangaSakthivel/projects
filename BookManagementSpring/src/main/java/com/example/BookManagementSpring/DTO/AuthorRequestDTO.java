@@ -5,7 +5,15 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthorRequestDTO {
     @NotBlank(message = "Full name is mandatory")
     @Size(min = 2, max = 100)
@@ -21,7 +29,7 @@ public class AuthorRequestDTO {
     @Column(unique = true)
     private String email;
     //@NotBlank since its a boolean we cannot use @notblank its works only on strings
-    private Boolean VerificationStatus;
+    private Boolean verificationStatus;
 
     public AuthorRequestDTO() {
     }
@@ -31,7 +39,7 @@ public class AuthorRequestDTO {
         this.nationality = nationality;
         this.biography = biography;
         this.email = email;
-        VerificationStatus = verificationStatus;
+        this.verificationStatus = verificationStatus;
     }
 
     public String getFullName() {
@@ -67,10 +75,10 @@ public class AuthorRequestDTO {
     }
 
     public Boolean getVerificationStatus() {
-        return VerificationStatus;
+        return verificationStatus;
     }
 
     public void setVerificationStatus(Boolean verificationStatus) {
-        VerificationStatus = verificationStatus;
+        this.verificationStatus = verificationStatus;
     }
 }
