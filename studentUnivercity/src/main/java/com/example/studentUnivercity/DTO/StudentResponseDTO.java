@@ -1,39 +1,35 @@
-package com.example.studentUnivercity.model;
+package com.example.studentUnivercity.DTO;
 
-
-import jakarta.persistence.*;
+import com.example.studentUnivercity.model.Gender;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
+public class StudentResponseDTO {
 
-@Entity
-@Table(name = "students")
-public class Student {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
     private String firstName;
-    @NotBlank
     private String lastName;
     private String email;
     private String phoneNumber;
     private LocalDate enrollmentDate;
-    @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "university_id") //we have this column called university_id in students which referenced to the id column in university
-    private University university;
+    public StudentResponseDTO() {
+    }
 
+    public StudentResponseDTO(Long id, String firstName, String lastName, String email, String phoneNumber, LocalDate enrollmentDate, Gender gender) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.enrollmentDate = enrollmentDate;
+        this.gender = gender;
+    }
 
     public Long getId() {
         return id;
@@ -89,13 +85,5 @@ public class Student {
 
     public void setGender(Gender gender) {
         this.gender = gender;
-    }
-
-    public University getUniversity() {
-        return university;
-    }
-
-    public void setUniversity(University university) {
-        this.university = university;
     }
 }

@@ -1,48 +1,30 @@
-package com.example.studentUnivercity.model;
+package com.example.studentUnivercity.DTO;
 
+import com.example.studentUnivercity.model.UniversityType;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.List;
-
-
-
-@Entity
-@Table(name = "universities")
-public class University {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UniversityResponseDTO {
     private Long id;
-
-    @NotBlank //not null not blank not even white spaces
     private String universityName;
-
     private String location;
     private Long establishedYear;
     private String website;
     private String email;
     private String phoneNumber;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
     private UniversityType universityType;
 
-    @OneToMany(mappedBy = "university") // // "university" is the field name in Student entity
-    private List<Student> student;
-    //don’t create a new join column in University! It's already mapped inside Student!"
+    public UniversityResponseDTO() {
+    }
 
-    //"In the Student entity, there is a field called university, and that's where the foreign key is stored."
-    //So the mappedBy uses the field name from the child entity.
-
-    @OneToMany(mappedBy = "university")
-    private List<Course> course;
+    public UniversityResponseDTO(Long id, String universityName, String location, Long establishedYear, String website, String email, String phoneNumber, UniversityType universityType) {
+        this.id = id;
+        this.universityName = universityName;
+        this.location = location;
+        this.establishedYear = establishedYear;
+        this.website = website;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.universityType = universityType;
+    }
 
     public Long getId() {
         return id;
@@ -106,21 +88,5 @@ public class University {
 
     public void setUniversityType(UniversityType universityType) {
         this.universityType = universityType;
-    }
-
-    public List<Student> getStudent() {
-        return student;
-    }
-
-    public void setStudent(List<Student> student) {
-        this.student = student;
-    }
-
-    public List<Course> getCourse() {
-        return course;
-    }
-
-    public void setCourse(List<Course> course) {
-        this.course = course;
     }
 }

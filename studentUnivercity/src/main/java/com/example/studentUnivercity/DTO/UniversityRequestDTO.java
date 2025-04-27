@@ -1,55 +1,37 @@
-package com.example.studentUnivercity.model;
+package com.example.studentUnivercity.DTO;
 
-
-import jakarta.persistence.*;
+import com.example.studentUnivercity.model.UniversityType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.util.List;
+public class UniversityRequestDTO {
 
-
-
-@Entity
-@Table(name = "universities")
-public class University {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank //not null not blank not even white spaces
+    @NotBlank
     private String universityName;
-
     private String location;
     private Long establishedYear;
     private String website;
+    @Email
     private String email;
     private String phoneNumber;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private UniversityType universityType;
 
-    @OneToMany(mappedBy = "university") // // "university" is the field name in Student entity
-    private List<Student> student;
-    //don’t create a new join column in University! It's already mapped inside Student!"
-
-    //"In the Student entity, there is a field called university, and that's where the foreign key is stored."
-    //So the mappedBy uses the field name from the child entity.
-
-    @OneToMany(mappedBy = "university")
-    private List<Course> course;
-
-    public Long getId() {
-        return id;
+    public UniversityRequestDTO() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public UniversityRequestDTO(String universityName, String location, Long establishedYear, String website, String email, String phoneNumber, UniversityType universityType) {
+        this.universityName = universityName;
+        this.location = location;
+        this.establishedYear = establishedYear;
+        this.website = website;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.universityType = universityType;
     }
 
     public String getUniversityName() {
@@ -106,21 +88,5 @@ public class University {
 
     public void setUniversityType(UniversityType universityType) {
         this.universityType = universityType;
-    }
-
-    public List<Student> getStudent() {
-        return student;
-    }
-
-    public void setStudent(List<Student> student) {
-        this.student = student;
-    }
-
-    public List<Course> getCourse() {
-        return course;
-    }
-
-    public void setCourse(List<Course> course) {
-        this.course = course;
     }
 }
