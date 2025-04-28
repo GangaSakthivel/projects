@@ -1,6 +1,7 @@
 package com.example.studentUnivercity.DTO;
 
 import com.example.studentUnivercity.model.UniversityType;
+import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -10,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 public class UniversityRequestDTO {
 
     @NotBlank
+    @Column(unique = true)
     private String universityName;
     private String location;
     private Long establishedYear;
