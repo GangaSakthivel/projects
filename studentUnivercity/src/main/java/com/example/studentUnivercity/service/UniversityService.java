@@ -38,4 +38,28 @@ public class UniversityService {
         return universityResponseDTOs;
     }
 
+    public UniversityResponseDTO createUniversity(UniversityRequestDTO universityRequestDTO) {
+        //request to entity
+
+        University university = new University();
+        university.setUniversityName(universityRequestDTO.getUniversityName());
+        university.setLocation(universityRequestDTO.getLocation());
+        university.setEstablishedYear(universityRequestDTO.getEstablishedYear());
+        university.setWebsite(universityRequestDTO.getWebsite());
+        university.setEmail(universityRequestDTO.getEmail());
+        university.setPhoneNumber(universityRequestDTO.getPhoneNumber());
+        university.setUniversityType(universityRequestDTO.getUniversityType());
+
+        //entity to response
+        UniversityResponseDTO responseDTO = new UniversityResponseDTO();
+        responseDTO.setId(university.getId());
+        responseDTO.setUniversityName(university.getUniversityName());
+        responseDTO.setLocation(university.getLocation());
+        responseDTO.setEstablishedYear(university.getEstablishedYear());
+        responseDTO.setWebsite(university.getWebsite());
+        responseDTO.setPhoneNumber(university.getPhoneNumber());
+        responseDTO.setUniversityType(university.getUniversityType());
+
+        return responseDTO;
+    }
 }
