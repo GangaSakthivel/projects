@@ -1,2 +1,4 @@
-package com.example.VehicleDocumentManagement.repository;public interface DocumentRepository {
+package com.example.VehicleDocumentManagement.repository;
+
+public interface DocumentRepository {
 }
