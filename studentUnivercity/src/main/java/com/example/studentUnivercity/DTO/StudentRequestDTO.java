@@ -1,6 +1,7 @@
 package com.example.studentUnivercity.DTO;
 
 import com.example.studentUnivercity.model.Gender;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -13,21 +14,24 @@ public class StudentRequestDTO {
     @NotBlank
     private String lastName;
     @Email
+    @Column(unique = true)
     private String email;
     private String phoneNumber;
     private LocalDate enrollmentDate;
     private Gender gender;
+    private Long university_id;
 
     public StudentRequestDTO() {
     }
 
-    public StudentRequestDTO(String firstName, String lastName, String email, String phoneNumber, LocalDate enrollmentDate, Gender gender) {
+    public StudentRequestDTO(String firstName, String lastName, String email, String phoneNumber, LocalDate enrollmentDate, Gender gender, Long university_id) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.enrollmentDate = enrollmentDate;
         this.gender = gender;
+        this.university_id = university_id;
     }
 
     public String getFirstName() {
@@ -76,5 +80,13 @@ public class StudentRequestDTO {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public Long getUniversity_id() {
+        return university_id;
+    }
+
+    public void setUniversity_id(Long university_id) {
+        this.university_id = university_id;
     }
 }

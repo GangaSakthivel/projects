@@ -21,7 +21,8 @@ public class University {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank //not null not blank not even white spaces
+    @NotBlank
+    @Column(unique = true)//not null not blank not even white spaces
     private String universityName;
 
     private String location;

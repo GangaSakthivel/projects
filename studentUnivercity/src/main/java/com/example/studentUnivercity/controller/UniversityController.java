@@ -3,6 +3,7 @@ package com.example.studentUnivercity.controller;
 
 import com.example.studentUnivercity.DTO.UniversityRequestDTO;
 import com.example.studentUnivercity.DTO.UniversityResponseDTO;
+import com.example.studentUnivercity.exceptions.ResourceNotFoundException;
 import com.example.studentUnivercity.model.University;
 import com.example.studentUnivercity.service.UniversityService;
 import jakarta.validation.Valid;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/universities")
@@ -40,6 +42,20 @@ public class UniversityController {
         return ResponseEntity.ok(responseDTO);
 
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UniversityResponseDTO> updateUniversity(@PathVariable Long id, @RequestBody UniversityRequestDTO requestDTO) {
+        UniversityResponseDTO responseDTO = universityService.updateUniversity(id, requestDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<UniversityResponseDTO> deleteUniversity(@PathVariable Long id){
+        UniversityResponseDTO responseDTO = universityService.deleteUniversity(id);
+        return ResponseEntity.ok().body(responseDTO);
+
+    }
+
 
  }
 

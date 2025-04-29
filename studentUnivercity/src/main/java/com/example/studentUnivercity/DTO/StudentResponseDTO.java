@@ -17,11 +17,12 @@ public class StudentResponseDTO {
     private String phoneNumber;
     private LocalDate enrollmentDate;
     private Gender gender;
+    private Long university_id;
 
     public StudentResponseDTO() {
     }
 
-    public StudentResponseDTO(Long id, String firstName, String lastName, String email, String phoneNumber, LocalDate enrollmentDate, Gender gender) {
+    public StudentResponseDTO(Long id, String firstName, String lastName, String email, String phoneNumber, LocalDate enrollmentDate, Gender gender, Long university_id) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -29,6 +30,7 @@ public class StudentResponseDTO {
         this.phoneNumber = phoneNumber;
         this.enrollmentDate = enrollmentDate;
         this.gender = gender;
+        this.university_id = university_id;
     }
 
     public Long getId() {
@@ -85,5 +87,13 @@ public class StudentResponseDTO {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public Long getUniversity_id() {
+        return university_id;
+    }
+
+    public void setUniversity_id(Long university_id) {
+        this.university_id = university_id;
     }
 }

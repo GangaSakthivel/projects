@@ -2,6 +2,7 @@ package com.example.studentUnivercity.service;
 
 import com.example.studentUnivercity.DTO.UniversityRequestDTO;
 import com.example.studentUnivercity.DTO.UniversityResponseDTO;
+import com.example.studentUnivercity.exceptions.ResourceNotFoundException;
 import com.example.studentUnivercity.exceptions.UniversityNotFoundException;
 import com.example.studentUnivercity.model.University;
 import com.example.studentUnivercity.repository.UniversityRepository;
@@ -69,6 +70,7 @@ public class UniversityService {
     }
 
     public UniversityResponseDTO getById(Long id) {
+
         University university = universityRepository.findById(id)
                 .orElseThrow(() -> new UniversityNotFoundException("University with ID " + id + " not found"));
 
@@ -86,4 +88,58 @@ public class UniversityService {
         return responseDTO;
 
     }
+
+
+    public UniversityResponseDTO updateUniversity(Long id, UniversityRequestDTO universityRequestDTO) {
+
+        University university = universityRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Id not found" + id));
+
+        university.setUniversityName(universityRequestDTO.getUniversityName());
+        university.setLocation(universityRequestDTO.getLocation());
+        university.setEstablishedYear(universityRequestDTO.getEstablishedYear());
+        university.setWebsite(universityRequestDTO.getWebsite());
+        university.setEmail(universityRequestDTO.getEmail());
+        university.setPhoneNumber(universityRequestDTO.getPhoneNumber());
+        university.setUniversityType(universityRequestDTO.getUniversityType());
+
+        //saving to the university entity
+        University savedUniversity = universityRepository.save(university);
+
+        //entity to response
+        UniversityResponseDTO responseDTO = new UniversityResponseDTO();
+        responseDTO.setId(savedUniversity.getId());
+        responseDTO.setUniversityName(savedUniversity.getUniversityName());
+        responseDTO.setLocation(savedUniversity.getLocation());
+        responseDTO.setEstablishedYear(savedUniversity.getEstablishedYear());
+        responseDTO.setWebsite(savedUniversity.getWebsite());
+        responseDTO.setEmail(savedUniversity.getEmail());
+        responseDTO.setPhoneNumber(savedUniversity.getPhoneNumber());
+        responseDTO.setUniversityType(savedUniversity.getUniversityType());
+
+        return responseDTO;
+    }
+
+    public UniversityResponseDTO deleteUniversity(Long id) {
+        // Step 1: Find the university by ID or throw exception
+        University university = universityRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("University with ID " + id + " not found"));
+
+        // Step 2: Delete the university
+        universityRepository.delete(university);
+
+        // Step 3: Prepare the response DTO from the deleted entity
+        UniversityResponseDTO responseDTO = new UniversityResponseDTO();
+        responseDTO.setId(university.getId());
+        responseDTO.setUniversityName(university.getUniversityName());
+        responseDTO.setLocation(university.getLocation());
+        responseDTO.setEstablishedYear(university.getEstablishedYear());
+        responseDTO.setWebsite(university.getWebsite());
+        responseDTO.setEmail(university.getEmail());
+        responseDTO.setPhoneNumber(university.getPhoneNumber());
+        responseDTO.setUniversityType(university.getUniversityType());
+
+        return responseDTO;
+    }
+
 }

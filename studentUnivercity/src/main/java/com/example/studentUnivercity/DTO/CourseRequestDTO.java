@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 
 public class CourseRequestDTO {
-    private Long id;
     @NotBlank
     private String name;
     private String description;
@@ -20,13 +19,12 @@ public class CourseRequestDTO {
     private LocalDate endDate;
     private String duration;
     private String level;
-    private Long universityId;
+    private Long university_id;
 
     public CourseRequestDTO() {
     }
 
-    public CourseRequestDTO(Long id, String name, String description, Integer credits, String semester, LocalDate startDate, LocalDate endDate, String duration, String level, Long universityId) {
-        this.id = id;
+    public CourseRequestDTO(Long id, String name, String description, Integer credits, String semester, LocalDate startDate, LocalDate endDate, String duration, String level, Long university_id) {
         this.name = name;
         this.description = description;
         this.credits = credits;
@@ -35,15 +33,7 @@ public class CourseRequestDTO {
         this.endDate = endDate;
         this.duration = duration;
         this.level = level;
-        this.universityId = universityId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.university_id = university_id;
     }
 
     public String getName() {
@@ -110,11 +100,11 @@ public class CourseRequestDTO {
         this.level = level;
     }
 
-    public Long getUniversityId() {
-        return universityId;
+    public Long getUniversity_id() {
+        return university_id;
     }
 
-    public void setUniversityId(Long universityId) {
-        this.universityId = universityId;
+    public void setUniversity_id(Long university_id) {
+        this.university_id = university_id;
     }
 }

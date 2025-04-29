@@ -27,10 +27,30 @@ public class CourseController {
         return ResponseEntity.ok(createResponse);
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<CourseResponseDTO>> getAllCourses(){
-//        CourseResponseDTO responseDTO = courseService.getAllCourses();
-//        //return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-//
-//    }
+    @GetMapping
+    public ResponseEntity<List<CourseResponseDTO>> getAllCourses() {
+        List<CourseResponseDTO> responseDTOs = courseService.getAllCourses();
+        return new ResponseEntity<>(responseDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CourseResponseDTO> getCourseById(@PathVariable Long id) {
+        CourseResponseDTO responseDTO = courseService.getCourseById(id);  // Call service to get the course by ID
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);  // Return the response DTO with HTTP status OK
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CourseResponseDTO> updateCourse(@PathVariable Long id, @RequestBody CourseRequestDTO courseRequestDTO) {
+        CourseResponseDTO updatedCourse = courseService.updateCourse(id, courseRequestDTO);  // Call service to update course
+        return new ResponseEntity<>(updatedCourse, HttpStatus.OK);  // Return the updated course with HTTP status OK
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCourse(@PathVariable Long id) {
+        courseService.deleteCourse(id);  // Call service to delete the course by ID
+        return new ResponseEntity<>("Course with ID " + id + " deleted successfully", HttpStatus.OK);  // Return confirmation message
+    }
+
+
+
 }
