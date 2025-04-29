@@ -1,6 +1,5 @@
 package com.example.userManagement.service;
 
-import com.example.userManagement.dto.UserLocationDTO;
 import com.example.userManagement.model.User;
 import com.example.userManagement.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,25 +14,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<UserLocationDTO> getAllUsersLocation(){
-        return userRepository.findAll()
-                .stream()
-                .map(this::convertEntityToDto)
-                .collect(Collectors.toList());
-        //gathers all DTOs into a List<UserLocationDTO> for the final result.
 
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
-
-    private UserLocationDTO convertEntityToDto(User user){
-        UserLocationDTO userLocationDTO = new UserLocationDTO();
-        userLocationDTO.setUserid(user.getId());
-        userLocationDTO.setEmail(user.getEmail());
-        userLocationDTO.setPlace(user.getLocation().getPlace());
-        userLocationDTO.setLongitude(user.getLocation().getLongitude());
-        userLocationDTO.setLatitude(user.getLocation().getLatitude());
-
-        return userLocationDTO;
-    }
-
-
 }
