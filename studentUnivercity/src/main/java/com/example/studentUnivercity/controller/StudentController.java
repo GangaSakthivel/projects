@@ -1,11 +1,13 @@
 package com.example.studentUnivercity.controller;
 
+import com.example.studentUnivercity.DTO.StudentDetailsDTO;
 import com.example.studentUnivercity.DTO.StudentRequestDTO;
 import com.example.studentUnivercity.DTO.StudentResponseDTO;
 import com.example.studentUnivercity.model.Student;
 import com.example.studentUnivercity.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +42,13 @@ public class StudentController {
     public ResponseEntity<StudentResponseDTO> deleteStudent(@PathVariable Long id){
         StudentResponseDTO responseDTO = studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/{name}")
+    public ResponseEntity<StudentDetailsDTO> getStudentDetails(@PathVariable Long id, @PathVariable String name){
+        StudentDetailsDTO detailsDTO = studentService.getStudentDetails(id, name);
+        return ResponseEntity.ok(detailsDTO);
+
     }
 
 

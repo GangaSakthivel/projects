@@ -1,5 +1,6 @@
 package com.example.studentUnivercity.service;
 
+import com.example.studentUnivercity.DTO.StudentDetailsDTO;
 import com.example.studentUnivercity.DTO.StudentRequestDTO;
 import com.example.studentUnivercity.DTO.StudentResponseDTO;
 import com.example.studentUnivercity.DTO.UniversityResponseDTO;
@@ -125,5 +126,9 @@ public class StudentService {
             return responseDTO;
         }
 
-    }
+//    public StudentDetailsDTO getStudentDetails(Long id, String name) {
+//
+//        Student student
+//    }
+}
 
