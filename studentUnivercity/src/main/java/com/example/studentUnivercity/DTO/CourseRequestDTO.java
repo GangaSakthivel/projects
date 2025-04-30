@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 
 public class CourseRequestDTO {
+
     @NotBlank
     private String name;
     private String description;

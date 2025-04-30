@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -34,6 +35,16 @@ public class Student {
     @JoinColumn(name = "university_id") //we have this column called university_id in students which referenced to the id column in university
     private University university;
 
+//    @OneToMany(mappedBy = "student")
+//    private List<Course> courses;
+
+    @ManyToMany
+    @JoinTable(
+            name = "student_courses",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> courses;
 
     public Long getId() {
         return id;
@@ -97,5 +108,13 @@ public class Student {
 
     public void setUniversity(University university) {
         this.university = university;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }

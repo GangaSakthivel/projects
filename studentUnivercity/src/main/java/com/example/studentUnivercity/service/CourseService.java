@@ -8,16 +8,10 @@ import com.example.studentUnivercity.model.University;
 import com.example.studentUnivercity.repository.CourseRepository;
 import com.example.studentUnivercity.repository.UniversityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CourseService {
@@ -46,12 +40,12 @@ public class CourseService {
         course.setDuration(courseRequestDTO.getDuration());
         course.setLevel(courseRequestDTO.getLevel());
 
-        // Save the course entity
+        // Save the course entity to generate ID
         Course savedCourse = courseRepository.save(course);
 
-        // Convert entity to response DTO
+        // Convert saved entity to response DTO
         CourseResponseDTO responseDTO = new CourseResponseDTO();
-        responseDTO.setId(savedCourse.getUniversity().getId());
+        responseDTO.setId(savedCourse.getId());
         responseDTO.setName(savedCourse.getName());
         responseDTO.setDescription(savedCourse.getDescription());
         responseDTO.setCredits(savedCourse.getCredits());
@@ -60,8 +54,8 @@ public class CourseService {
         responseDTO.setEndDate(savedCourse.getEndDate());
         responseDTO.setDuration(savedCourse.getDuration());
         responseDTO.setLevel(savedCourse.getLevel());
-        responseDTO.setUniversityName(university.getUniversityName());
-        responseDTO.setUniversityWebsite(university.getWebsite());
+        responseDTO.setUniversityName(savedCourse.getUniversity().getUniversityName());
+        responseDTO.setUniversityWebsite(savedCourse.getUniversity().getWebsite());
 
         return responseDTO;
     }
@@ -70,11 +64,11 @@ public class CourseService {
     public List<CourseResponseDTO> getAllCourses() {
         List<Course> courses = courseRepository.findAll();
 
-        // Map each Course entity to CourseResponseDTO
         List<CourseResponseDTO> responseDTOs = new ArrayList<>();
 
         for (Course course : courses) {
             CourseResponseDTO responseDTO = new CourseResponseDTO();
+            responseDTO.setId(course.getId());
             responseDTO.setId(course.getUniversity().getId());
             responseDTO.setName(course.getName());
             responseDTO.setDescription(course.getDescription());
@@ -85,7 +79,6 @@ public class CourseService {
             responseDTO.setDuration(course.getDuration());
             responseDTO.setLevel(course.getLevel());
 
-            // Set university details for the course
             responseDTO.setUniversityName(course.getUniversity().getUniversityName());
             responseDTO.setUniversityWebsite(course.getUniversity().getWebsite());
 
@@ -121,11 +114,9 @@ public class CourseService {
 
     public CourseResponseDTO updateCourse(Long id, CourseRequestDTO courseRequestDTO) {
 
-        // Find existing course
         Course existingCourse = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found with ID: " + id));
 
-        // Find the associated university
         University university = universityRepository.findById(courseRequestDTO.getUniversity_id())
                 .orElseThrow(() -> new ResourceNotFoundException("University not found with ID: " + courseRequestDTO.getUniversity_id()));
 
@@ -138,7 +129,7 @@ public class CourseService {
         existingCourse.setEndDate(courseRequestDTO.getEndDate());
         existingCourse.setDuration(courseRequestDTO.getDuration());
         existingCourse.setLevel(courseRequestDTO.getLevel());
-        existingCourse.setUniversity(university); // update university relationship
+        existingCourse.setUniversity(university);
 
         // Save updated course
         Course updatedCourse = courseRepository.save(existingCourse);

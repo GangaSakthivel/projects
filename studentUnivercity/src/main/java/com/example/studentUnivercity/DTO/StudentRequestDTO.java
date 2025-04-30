@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class StudentRequestDTO {
 
@@ -20,11 +21,12 @@ public class StudentRequestDTO {
     private LocalDate enrollmentDate;
     private Gender gender;
     private Long university_id;
+    private List<String> courses;
 
     public StudentRequestDTO() {
     }
 
-    public StudentRequestDTO(String firstName, String lastName, String email, String phoneNumber, LocalDate enrollmentDate, Gender gender, Long university_id) {
+    public StudentRequestDTO(String firstName, String lastName, String email, String phoneNumber, LocalDate enrollmentDate, Gender gender, Long university_id, List<String> courses) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -32,6 +34,7 @@ public class StudentRequestDTO {
         this.enrollmentDate = enrollmentDate;
         this.gender = gender;
         this.university_id = university_id;
+        this.courses = courses;
     }
 
     public String getFirstName() {
@@ -88,5 +91,13 @@ public class StudentRequestDTO {
 
     public void setUniversity_id(Long university_id) {
         this.university_id = university_id;
+    }
+
+    public List<String> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<String> courses) {
+        this.courses = courses;
     }
 }

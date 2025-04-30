@@ -31,6 +31,17 @@ public class Course {
     private University university;
     //create a column called university_id in the course table that references university(id)."
 
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -102,6 +113,14 @@ public class Course {
 
     public void setUniversity(University university) {
         this.university = university;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }
 

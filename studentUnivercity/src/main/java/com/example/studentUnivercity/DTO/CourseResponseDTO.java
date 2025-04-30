@@ -9,8 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class CourseResponseDTO {
-
-
     private Long id;
     private String name;
     private String description;
