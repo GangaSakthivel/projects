@@ -2,8 +2,6 @@ package com.example.VehicleDocumentManagement.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 @Table(name = "documents")
 public class Document {
@@ -11,14 +9,18 @@ public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private byte[] vehiclePhoto;
+
+    private String documentType;
+    private String fileName;
 
     @Lob
-    @ElementCollection
-    private List<byte[]> documents;
+    @Column(name = "file_data", columnDefinition = "BYTEA")
+    private byte[] fileData;
+
+    private String fileUrl; // URL to access the document
 
     @ManyToOne
-    @JoinColumn(name = "vehicle_id") //column name in document that references primary key in vehicles
+    @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
     public Long getId() {
@@ -29,20 +31,36 @@ public class Document {
         this.id = id;
     }
 
-    public byte[] getVehiclePhoto() {
-        return vehiclePhoto;
+    public String getDocumentType() {
+        return documentType;
     }
 
-    public void setVehiclePhoto(byte[] vehiclePhoto) {
-        this.vehiclePhoto = vehiclePhoto;
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 
-    public List<byte[]> getDocuments() {
-        return documents;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setDocuments(List<byte[]> documents) {
-        this.documents = documents;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public byte[] getFileData() {
+        return fileData;
+    }
+
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
     }
 
     public Vehicle getVehicle() {

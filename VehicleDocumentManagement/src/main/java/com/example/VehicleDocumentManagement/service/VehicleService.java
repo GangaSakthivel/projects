@@ -1,8 +1,10 @@
 package com.example.VehicleDocumentManagement.service;
 
+import com.example.VehicleDocumentManagement.dto.DocumentResponseDTO;
 import com.example.VehicleDocumentManagement.dto.VehicleRequestDTO;
 import com.example.VehicleDocumentManagement.dto.VehicleResponseDTO;
 import com.example.VehicleDocumentManagement.model.Vehicle;
+import com.example.VehicleDocumentManagement.repository.DocumentRepository;
 import com.example.VehicleDocumentManagement.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,64 +14,96 @@ import java.util.stream.Collectors;
 
 @Service
 public class VehicleService {
-    
+
     @Autowired
     private VehicleRepository vehicleRepository;
 
+    @Autowired
+    private DocumentRepository documentRepository;
 
+    // Create or Update a Vehicle
     public VehicleResponseDTO createVehicle(VehicleRequestDTO vehicleRequestDTO) {
-
         Vehicle vehicle = new Vehicle();
-
         vehicle.setVehicleNumber(vehicleRequestDTO.getVehicleNumber());
+        vehicle.setVehicleName(vehicleRequestDTO.getVehicleName());
         vehicle.setVehicleType(vehicleRequestDTO.getVehicleType());
         vehicle.setRunningKm(vehicleRequestDTO.getRunningKm());
         vehicle.setNextServiceKm(vehicleRequestDTO.getNextServiceKm());
-        vehicle.setFuelTankCapacity(vehicleRequestDTO.getFuelTankCapacity());
-        vehicle.setVehicleAvailability(vehicleRequestDTO.isVehicleAvailability());
         vehicle.setNotes(vehicleRequestDTO.getNotes());
+        vehicle.setVehicleAvailability(vehicleRequestDTO.isVehicleAvailability());
 
         Vehicle savedVehicle = vehicleRepository.save(vehicle);
 
-        VehicleResponseDTO responseDTO = new VehicleResponseDTO();
-
-        responseDTO.setId(savedVehicle.getId());
-        responseDTO.setVehicleNumber(savedVehicle.getVehicleNumber());
-        responseDTO.setVehicleType(savedVehicle.getVehicleType());
-        responseDTO.setRunningKm(savedVehicle.getRunningKm());
-        responseDTO.setNextServiceKm(savedVehicle.getNextServiceKm());
-        responseDTO.setFuelTankCapacity(savedVehicle.getFuelTankCapacity());
-        responseDTO.setVehicleAvailability(savedVehicle.isVehicleAvailability());
-        responseDTO.setNotes(savedVehicle.getNotes());
-
-        return responseDTO;
-
+        return convertToResponseDTO(savedVehicle);
     }
 
+    // Get all Vehicles
     public List<VehicleResponseDTO> getAllVehicles() {
         List<Vehicle> vehicles = vehicleRepository.findAll();
+        return vehicles.stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
+    }
 
-        // Convert the list of Vehicle entities to VehicleResponseDTOs
-        List<VehicleResponseDTO> responseDTO = vehicles.stream()
-                .map(vehicle -> {
-                    // Create a new VehicleResponseDTO and set values from the Vehicle entity
-                    VehicleResponseDTO dto = new VehicleResponseDTO();
-                    dto.setId(vehicle.getId());
-                    dto.setVehicleNumber(vehicle.getVehicleNumber());
-                    dto.setVehicleType(vehicle.getVehicleType());
-                    dto.setRunningKm(vehicle.getRunningKm());
-                    dto.setNextServiceKm(vehicle.getNextServiceKm());
-                    dto.setFuelTankCapacity(vehicle.getFuelTankCapacity());
-                    dto.setVehicleAvailability(vehicle.isVehicleAvailability());
-                    dto.setNotes(vehicle.getNotes());
+    // Get a Vehicle by ID
+    public VehicleResponseDTO getVehicleById(Long id) {
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+        return convertToResponseDTO(vehicle);
+    }
 
-                    // Return the mapped DTO
-                    return dto;
-                })
-                .collect(Collectors.toList()); // Collect all mapped DTOs into a list
+    // Update a Vehicle
+    public VehicleResponseDTO updateVehicle(Long id, VehicleRequestDTO vehicleRequestDTO) {
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
 
-        // Return the list of VehicleResponseDTOs
+        vehicle.setVehicleNumber(vehicleRequestDTO.getVehicleNumber());
+        vehicle.setVehicleName(vehicleRequestDTO.getVehicleName());
+        vehicle.setVehicleType(vehicleRequestDTO.getVehicleType());
+        vehicle.setRunningKm(vehicleRequestDTO.getRunningKm());
+        vehicle.setNextServiceKm(vehicleRequestDTO.getNextServiceKm());
+        vehicle.setNotes(vehicleRequestDTO.getNotes());
+        vehicle.setVehicleAvailability(vehicleRequestDTO.isVehicleAvailability());
+
+        Vehicle updatedVehicle = vehicleRepository.save(vehicle);
+
+        return convertToResponseDTO(updatedVehicle);
+    }
+
+    // Delete a Vehicle
+    public void deleteVehicle(Long id) {
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+        vehicleRepository.delete(vehicle);
+    }
+
+    // Helper method to convert Vehicle to VehicleResponseDTO
+    private VehicleResponseDTO convertToResponseDTO(Vehicle vehicle) {
+        VehicleResponseDTO responseDTO = new VehicleResponseDTO();
+        responseDTO.setId(vehicle.getId());
+        responseDTO.setVehicleNumber(vehicle.getVehicleNumber());
+        responseDTO.setVehicleName(vehicle.getVehicleName());
+        responseDTO.setVehicleType(vehicle.getVehicleType());
+        responseDTO.setRunningKm(vehicle.getRunningKm());
+        responseDTO.setNextServiceKm(vehicle.getNextServiceKm());
+        responseDTO.setNotes(vehicle.getNotes());
+        responseDTO.setVehicleAvailability(vehicle.isVehicleAvailability());
+
+        // You can add documents as well, for example, for the VehicleResponseDTO
+        List<DocumentResponseDTO> documentResponseDTOs = documentRepository.findByVehicle(vehicle)
+                .stream()
+                .map(document -> new DocumentResponseDTO(
+                        document.getId(),
+                        document.getDocumentType(),
+                        document.getFileName(),
+                        document.getFileUrl()))
+                .collect(Collectors.toList());
+        responseDTO.setDocuments(documentResponseDTOs);
+
         return responseDTO;
     }
+
+
+
 
 }

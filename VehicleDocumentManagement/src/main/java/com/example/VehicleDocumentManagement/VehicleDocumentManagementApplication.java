@@ -9,5 +9,6 @@ public class VehicleDocumentManagementApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(VehicleDocumentManagementApplication.class, args);
 	}
-
 }
+
+

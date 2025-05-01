@@ -1,37 +1,27 @@
 package com.example.VehicleDocumentManagement.dto;
 
 import com.example.VehicleDocumentManagement.model.VehicleType;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public class VehicleRequestDTO {
-
-    @Column(unique = true)
     private String vehicleNumber;
-    @Enumerated(EnumType.STRING)
+    private String vehicleName;
     private VehicleType vehicleType;
-    @NotNull
     private Long runningKm;
-    @NotNull
     private Long nextServiceKm;
-    @NotNull
-    private Long fuelTankCapacity;
-    private boolean vehicleAvailability;
-    @NotBlank
     private String notes;
+    private boolean vehicleAvailability;
 
     public VehicleRequestDTO() {
     }
 
-    public VehicleRequestDTO(Long id, String vehicleNumber, VehicleType vehicleType, Long runningKm, Long nextServiceKm, Long fuelTankCapacity, boolean vehicleAvailability, String notes) {
+    public VehicleRequestDTO(String vehicleNumber, String vehicleName, VehicleType vehicleType, Long runningKm, Long nextServiceKm, String notes, boolean vehicleAvailability) {
         this.vehicleNumber = vehicleNumber;
+        this.vehicleName = vehicleName;
         this.vehicleType = vehicleType;
         this.runningKm = runningKm;
         this.nextServiceKm = nextServiceKm;
-        this.fuelTankCapacity = fuelTankCapacity;
-        this.vehicleAvailability = vehicleAvailability;
         this.notes = notes;
+        this.vehicleAvailability = vehicleAvailability;
     }
 
     public String getVehicleNumber() {
@@ -40,6 +30,14 @@ public class VehicleRequestDTO {
 
     public void setVehicleNumber(String vehicleNumber) {
         this.vehicleNumber = vehicleNumber;
+    }
+
+    public String getVehicleName() {
+        return vehicleName;
+    }
+
+    public void setVehicleName(String vehicleName) {
+        this.vehicleName = vehicleName;
     }
 
     public VehicleType getVehicleType() {
@@ -66,12 +64,12 @@ public class VehicleRequestDTO {
         this.nextServiceKm = nextServiceKm;
     }
 
-    public Long getFuelTankCapacity() {
-        return fuelTankCapacity;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setFuelTankCapacity(Long fuelTankCapacity) {
-        this.fuelTankCapacity = fuelTankCapacity;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public boolean isVehicleAvailability() {
@@ -82,11 +80,4 @@ public class VehicleRequestDTO {
         this.vehicleAvailability = vehicleAvailability;
     }
 
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
 }
