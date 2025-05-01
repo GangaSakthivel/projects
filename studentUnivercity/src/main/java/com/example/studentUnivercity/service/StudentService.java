@@ -1,8 +1,8 @@
 package com.example.studentUnivercity.service;
 
-import com.example.studentUnivercity.DTO.*;
+import com.example.studentUnivercity.DTO.StudentRequestDTO;
+import com.example.studentUnivercity.DTO.StudentResponseDTO;
 import com.example.studentUnivercity.exceptions.ResourceNotFoundException;
-import com.example.studentUnivercity.model.Course;
 import com.example.studentUnivercity.model.Student;
 import com.example.studentUnivercity.model.University;
 import com.example.studentUnivercity.repository.StudentRepository;
@@ -10,7 +10,6 @@ import com.example.studentUnivercity.repository.UniversityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -125,57 +124,5 @@ public class StudentService {
             return responseDTO;
         }
 
-    public StudentDetailsDTO getStudentDetails(Long id, String name) {
-        // Step 1: Fetch student by ID and first name (assuming first name is the 'name' parameter)
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
-
-        if (!student.getFirstName().equalsIgnoreCase(name)) {
-            throw new RuntimeException("Student name does not match with the given ID.");
-        }
-
-        // Step 2: Prepare StudentDetailsDTO
-        StudentDetailsDTO studentDetailsDTO = new StudentDetailsDTO();
-        studentDetailsDTO.setFirstName(student.getFirstName());
-        studentDetailsDTO.setLastName(student.getLastName());
-        studentDetailsDTO.setEmail(student.getEmail());
-
-        // Step 3: Convert university to UniversityResponseDTO
-        University university = student.getUniversity();
-        UniversityResponseDTO universityDTO = new UniversityResponseDTO();
-        universityDTO.setId(university.getId());
-        universityDTO.setUniversityName(university.getUniversityName());
-        universityDTO.setWebsite(university.getWebsite());
-
-        studentDetailsDTO.setUniversity(universityDTO);
-
-        // Step 4: Convert each course to CourseResponseDTO
-        List<CourseResponseDTO> courseDTOList = new ArrayList<>();
-        for (Course course : student.getCourses()) {
-            CourseResponseDTO courseDTO = new CourseResponseDTO();
-            courseDTO.setId(course.getId());
-            courseDTO.setName(course.getName());
-            courseDTO.setDescription(course.getDescription());
-            courseDTO.setCredits(course.getCredits());
-            courseDTO.setSemester(course.getSemester());
-            courseDTO.setStartDate(course.getStartDate());
-            courseDTO.setEndDate(course.getEndDate());
-            courseDTO.setDuration(course.getDuration());
-            courseDTO.setLevel(course.getLevel());
-            courseDTO.setUniversityName(course.getUniversity().getUniversityName());
-            courseDTO.setUniversityWebsite(course.getUniversity().getWebsite());
-            courseDTOList.add(courseDTO);
-        }
-
-        studentDetailsDTO.setCourses(courseDTOList);
-
-        return studentDetailsDTO;
-    }
-
-
-//    public StudentDetailsDTO getStudentDetails(Long id, String name) {
-//
-//        Student student
-//    }
 }
 
