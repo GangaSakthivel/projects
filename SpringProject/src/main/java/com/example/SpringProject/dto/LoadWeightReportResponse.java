@@ -2,17 +2,12 @@ package com.example.SpringProject.dto;
 
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-public class LoadWeightResponseDTO {
+public class LoadWeightReportResponse {
     private String vehicleNumber;
+    private String vehicleName;
     private String farmerName;
     private String traderName;
     private Double emptyWeight;
@@ -22,11 +17,12 @@ public class LoadWeightResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public LoadWeightResponseDTO() {
+    public LoadWeightReportResponse() {
     }
 
-    public LoadWeightResponseDTO(String vehicleNumber, String farmerName, String traderName, Double emptyWeight, Double loadWeight, Double netWeight, String status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public LoadWeightReportResponse(String vehicleNumber, String vehicleName, String farmerName, String traderName, Double emptyWeight, Double loadWeight, Double netWeight, String status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.vehicleNumber = vehicleNumber;
+        this.vehicleName = vehicleName;
         this.farmerName = farmerName;
         this.traderName = traderName;
         this.emptyWeight = emptyWeight;
@@ -43,6 +39,14 @@ public class LoadWeightResponseDTO {
 
     public void setVehicleNumber(String vehicleNumber) {
         this.vehicleNumber = vehicleNumber;
+    }
+
+    public String getVehicleName() {
+        return vehicleName;
+    }
+
+    public void setVehicleName(String vehicleName) {
+        this.vehicleName = vehicleName;
     }
 
     public String getFarmerName() {
@@ -109,7 +113,6 @@ public class LoadWeightResponseDTO {
         this.updatedAt = updatedAt;
     }
 
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -122,4 +125,3 @@ public class LoadWeightResponseDTO {
     }
 
 }
-

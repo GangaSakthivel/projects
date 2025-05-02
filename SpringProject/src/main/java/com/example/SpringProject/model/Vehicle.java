@@ -1,15 +1,14 @@
 package com.example.SpringProject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.security.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "vehicles")
-@Data
 public class Vehicle {
 
     @Id
@@ -18,7 +17,7 @@ public class Vehicle {
     private Long vehicleId;
 
     @Column(name = "vehicle_number", nullable = false)
-    private Integer vehicleNumber;
+    private String vehicleNumber;
 
     @Column(name = "vehicle_name", nullable = false)
     private String vehicleName;
@@ -33,6 +32,10 @@ public class Vehicle {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "vehicle")
+    @JsonIgnore
+    private List<LoadWeight> loadWeights;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -42,5 +45,74 @@ public class Vehicle {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public Vehicle() {
+    }
+
+    public Vehicle(Long vehicleId, String vehicleNumber, String vehicleName, Status status, LocalDateTime createdAt, LocalDateTime updatedAt, List<LoadWeight> loadWeights) {
+        this.vehicleId = vehicleId;
+        this.vehicleNumber = vehicleNumber;
+        this.vehicleName = vehicleName;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.loadWeights = loadWeights;
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
+    public String getVehicleNumber() {
+        return vehicleNumber;
+    }
+
+    public void setVehicleNumber(String vehicleNumber) {
+        this.vehicleNumber = vehicleNumber;
+    }
+
+    public String getVehicleName() {
+        return vehicleName;
+    }
+
+    public void setVehicleName(String vehicleName) {
+        this.vehicleName = vehicleName;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<LoadWeight> getLoadWeights() {
+        return loadWeights;
+    }
+
+    public void setLoadWeights(List<LoadWeight> loadWeights) {
+        this.loadWeights = loadWeights;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.SpringProject.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,7 +11,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "traders")
-@Data
 public class Trader {
 
     @Id
@@ -22,7 +22,7 @@ public class Trader {
     private String traderName;
 
     @Column(name = "phone_number", nullable = false)
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     @Column(name = "address", nullable = false)
     private String address;
@@ -37,8 +37,9 @@ public class Trader {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<LoadWeight> loadWeights;  // List of LoadWeight entries for the vehicle
+    @OneToMany(mappedBy = "trader")
+    @JsonIgnore
+    private List<LoadWeight> loadWeights;
 
     @PrePersist
     protected void onCreate() {
@@ -51,4 +52,81 @@ public class Trader {
         updatedAt = LocalDateTime.now();
     }
 
+    public Trader() {
+    }
+
+    public Trader(Long traderId, String traderName, String phoneNumber, String address, Status status, LocalDateTime createdAt, LocalDateTime updatedAt, List<LoadWeight> loadWeights) {
+        this.traderId = traderId;
+        this.traderName = traderName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.loadWeights = loadWeights;
+    }
+
+    public Long getTraderId() {
+        return traderId;
+    }
+
+    public void setTraderId(Long traderId) {
+        this.traderId = traderId;
+    }
+
+    public String getTraderName() {
+        return traderName;
+    }
+
+    public void setTraderName(String traderName) {
+        this.traderName = traderName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<LoadWeight> getLoadWeights() {
+        return loadWeights;
+    }
+
+    public void setLoadWeights(List<LoadWeight> loadWeights) {
+        this.loadWeights = loadWeights;
+    }
 }
