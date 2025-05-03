@@ -1,31 +1,29 @@
 package com.example.SpringProject.dto;
 
 import com.example.SpringProject.model.Status;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 public class LoadWeightRequestDTO {
 
-    private String number;
+    private Long number;
     private Double empty;
     private Double load;
     private Status status;
+    @NotNull
+    @Column(unique = true)
     private Long vehicleId;
+    @NotNull
     private Long farmerId;
+    @NotNull
     private Long traderId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     public LoadWeightRequestDTO() {
     }
 
-    public LoadWeightRequestDTO(String number, Double empty, Double load, Status status, Long vehicleId, Long farmerId, Long traderId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public LoadWeightRequestDTO(Long number, Double empty, Double load, Status status, Long vehicleId, Long farmerId, Long traderId) {
         this.number = number;
         this.empty = empty;
         this.load = load;
@@ -33,15 +31,13 @@ public class LoadWeightRequestDTO {
         this.vehicleId = vehicleId;
         this.farmerId = farmerId;
         this.traderId = traderId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
-    public String getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -92,34 +88,5 @@ public class LoadWeightRequestDTO {
     public void setTraderId(Long traderId) {
         this.traderId = traderId;
     }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-
 }
 

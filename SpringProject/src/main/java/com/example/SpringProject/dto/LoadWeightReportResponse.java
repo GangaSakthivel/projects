@@ -1,9 +1,11 @@
 package com.example.SpringProject.dto;
 
+import com.example.SpringProject.model.ItemDetail;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class LoadWeightReportResponse {
     private String vehicleNumber;
@@ -16,11 +18,12 @@ public class LoadWeightReportResponse {
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<ItemDetail> itemDetails;
 
     public LoadWeightReportResponse() {
     }
 
-    public LoadWeightReportResponse(String vehicleNumber, String vehicleName, String farmerName, String traderName, Double emptyWeight, Double loadWeight, Double netWeight, String status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public LoadWeightReportResponse(String vehicleNumber, String vehicleName, String farmerName, String traderName, Double emptyWeight, Double loadWeight, Double netWeight, String status, LocalDateTime createdAt, LocalDateTime updatedAt, List<ItemDetail> itemDetails) {
         this.vehicleNumber = vehicleNumber;
         this.vehicleName = vehicleName;
         this.farmerName = farmerName;
@@ -31,6 +34,7 @@ public class LoadWeightReportResponse {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.itemDetails = itemDetails;
     }
 
     public String getVehicleNumber() {
@@ -111,6 +115,14 @@ public class LoadWeightReportResponse {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<ItemDetail> getItemDetails() {
+        return itemDetails;
+    }
+
+    public void setItemDetails(List<ItemDetail> itemDetails) {
+        this.itemDetails = itemDetails;
     }
 
     @PrePersist

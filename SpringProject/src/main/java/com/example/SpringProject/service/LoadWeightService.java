@@ -96,8 +96,7 @@ public class LoadWeightService {
         lw.setEmpty(dto.getEmpty());
         lw.setLoad(dto.getLoad());
         lw.setStatus(dto.getStatus());
-        lw.setCreatedAt(dto.getCreatedAt());
-        lw.setUpdatedAt(dto.getUpdatedAt());
+
 
         LoadWeight updated = loadWeightRepository.save(lw);
         return mapToResponseDTO(updated);
@@ -117,6 +116,11 @@ public class LoadWeightService {
                 lw.getCreatedAt(),
                 lw.getUpdatedAt()
         );
+    }
+
+    public LoadWeight saveLoadWeight(LoadWeight loadWeight) {
+        // Persist LoadWeight (and cascading ItemDetails)
+        return loadWeightRepository.save(loadWeight);
     }
 
 

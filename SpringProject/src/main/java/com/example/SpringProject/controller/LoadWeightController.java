@@ -8,12 +8,15 @@ import com.example.SpringProject.model.Vehicle;
 import com.example.SpringProject.repository.LoadWeightRepository;
 import com.example.SpringProject.repository.VehicleRepository;
 import com.example.SpringProject.service.LoadWeightService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
-@RequestMapping("api/loadweight")
+@RequestMapping("api/load-weight")
 public class LoadWeightController {
     @Autowired
     private LoadWeightRepository loadWeightRepository;
@@ -25,9 +28,20 @@ public class LoadWeightController {
     private LoadWeightService loadWeightService;
 
     @PostMapping
-    public ResponseEntity<LoadWeightResponseDTO> createLoadWeight(@RequestBody LoadWeightRequestDTO loadWeightRequestDTO) {
+    public ResponseEntity<LoadWeightResponseDTO> createLoadWeight(@Valid @RequestBody LoadWeightRequestDTO loadWeightRequestDTO) {
+        // Find the vehicle by ID from the DTO
+        Vehicle vehicle = vehicleRepository.findById(loadWeightRequestDTO.getVehicleId())
+                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+
+        Optional<LoadWeight> existingLoadWeight = loadWeightRepository.findByVehicle(vehicle);
+        if (existingLoadWeight.isPresent()) {
+            throw new RuntimeException("LoadWeight already exists for this vehicle");
+        }
+
+        // If no existing LoadWeight, proceed to service layer to create a new LoadWeight
         return loadWeightService.createLoadWeight(loadWeightRequestDTO);
     }
+
 
 
     @GetMapping("/{id}")
@@ -50,7 +64,7 @@ public class LoadWeightController {
                 .orElseThrow(() -> new RuntimeException("LoadWeight not found for this vehicle"));
 
         LoadWeightReportResponse response = new LoadWeightReportResponse();
-        response.setVehicleNumber(vehicle.getVehicleNumber().toString());
+        response.setVehicleNumber(vehicle.getVehicleNumber());
         response.setVehicleName(vehicle.getVehicleName());
         response.setFarmerName(loadWeight.getFarmer().getName());
         response.setTraderName(loadWeight.getTrader().getTraderName());
@@ -60,9 +74,17 @@ public class LoadWeightController {
         response.setStatus(loadWeight.getStatus().toString());
         response.setCreatedAt(loadWeight.getCreatedAt());
         response.setUpdatedAt(loadWeight.getUpdatedAt());
+        response.setItemDetails(loadWeight.getItemDetails());
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/load-weight")
+    public ResponseEntity<LoadWeight> createLoadWeight(@RequestBody LoadWeight loadWeight) {
+        LoadWeight savedLoadWeight = loadWeightService.saveLoadWeight(loadWeight);
+        return ResponseEntity.ok(savedLoadWeight);
+    }
+
 
 }
 

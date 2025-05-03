@@ -1,11 +1,8 @@
 package com.example.SpringProject.model;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,7 +19,7 @@ public class Trader {
     private String traderName;
 
     @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
+    private Long phoneNumber;
 
     @Column(name = "address", nullable = false)
     private String address;
@@ -55,7 +52,7 @@ public class Trader {
     public Trader() {
     }
 
-    public Trader(Long traderId, String traderName, String phoneNumber, String address, Status status, LocalDateTime createdAt, LocalDateTime updatedAt, List<LoadWeight> loadWeights) {
+    public Trader(Long traderId, String traderName, Long phoneNumber, String address, Status status, LocalDateTime createdAt, LocalDateTime updatedAt, List<LoadWeight> loadWeights) {
         this.traderId = traderId;
         this.traderName = traderName;
         this.phoneNumber = phoneNumber;
@@ -82,11 +79,11 @@ public class Trader {
         this.traderName = traderName;
     }
 
-    public String getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

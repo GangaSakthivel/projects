@@ -1,12 +1,13 @@
 package com.example.SpringProject.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
+//@Data
 //@NoArgsConstructor
 //@AllArgsConstructor
 @Entity
@@ -18,7 +19,7 @@ public class LoadWeight {
     private Long id;
 
     @Column(nullable = false)
-    private String number;
+    private Long number;
 
     @Column(nullable = false)
     private Double empty;
@@ -33,7 +34,7 @@ public class LoadWeight {
 
     @ManyToOne
     @JoinColumn(name = "farmer_id")
-    @JsonBackReference
+    @JsonIgnore
     private Farmer farmer;
 
 
@@ -44,6 +45,9 @@ public class LoadWeight {
     @ManyToOne
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
+
+    @OneToMany(mappedBy = "loadWeight", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ItemDetail> itemDetails = new ArrayList<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -66,11 +70,10 @@ public class LoadWeight {
         return load - empty;
     }
 
-
     public LoadWeight() {
     }
 
-    public LoadWeight(Long id, String number, Double empty, Double load, Status status, Farmer farmer, Trader trader, Vehicle vehicle, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public LoadWeight(Long id, Long number, Double empty, Double load, Status status, Farmer farmer, Trader trader, Vehicle vehicle, LocalDateTime createdAt, LocalDateTime updatedAt, List<ItemDetail> itemDetails) {
         this.id = id;
         this.number = number;
         this.empty = empty;
@@ -81,6 +84,7 @@ public class LoadWeight {
         this.vehicle = vehicle;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.itemDetails = itemDetails;
     }
 
     public Long getId() {
@@ -91,11 +95,11 @@ public class LoadWeight {
         this.id = id;
     }
 
-    public String getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -161,5 +165,13 @@ public class LoadWeight {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<ItemDetail> getItemDetails() {
+        return itemDetails;
+    }
+
+    public void setItemDetails(List<ItemDetail> itemDetails) {
+        this.itemDetails = itemDetails;
     }
 }

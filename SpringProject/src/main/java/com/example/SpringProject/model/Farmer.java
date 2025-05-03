@@ -43,7 +43,6 @@ public class Farmer {
     @JsonIgnore
     private List<LoadWeight> loadWeights;
 
-
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
