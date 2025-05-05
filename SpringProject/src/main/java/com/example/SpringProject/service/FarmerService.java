@@ -19,7 +19,6 @@ public class FarmerService {
     @Autowired
     private FarmerRepository farmerRepository;
 
-    // Helper method to convert Farmer entity to FarmerResponseDTO
     private FarmerResponseDTO convertToResponseDTO(Farmer farmer) {
         FarmerResponseDTO responseDTO = new FarmerResponseDTO();
         responseDTO.setId(farmer.getId());
@@ -32,19 +31,16 @@ public class FarmerService {
         return responseDTO;
     }
 
-    // POST: Create a new Farmer
     public FarmerResponseDTO createFarmer(FarmerRequestDTO farmerRequestDTO) {
         Farmer farmer = new Farmer();
         farmer.setName(farmerRequestDTO.getName());
         farmer.setPhoneNumber(farmerRequestDTO.getPhoneNumber());
         farmer.setAddress(farmerRequestDTO.getAddress());
         farmer.setStatus(farmerRequestDTO.getStatus());
-        // createdAt and updatedAt will be handled by @PrePersist in the Entity
         Farmer savedFarmer = farmerRepository.save(farmer);
         return convertToResponseDTO(savedFarmer);
     }
 
-    // GET: Get all Farmers
     public List<FarmerResponseDTO> getAllFarmers() {
         List<Farmer> farmers = farmerRepository.findAll();
         return farmers.stream()
@@ -52,7 +48,6 @@ public class FarmerService {
                 .collect(Collectors.toList());
     }
 
-    // GET: Get a Farmer by ID
     public FarmerResponseDTO getFarmerById(Long id) {
         Optional<Farmer> farmer = farmerRepository.findById(id);
         if (farmer.isPresent()) {
@@ -62,7 +57,6 @@ public class FarmerService {
         }
     }
 
-    // PUT: Update a Farmer by ID
     public FarmerResponseDTO updateFarmer(Long id, FarmerRequestDTO farmerRequestDTO) {
         Optional<Farmer> existingFarmer = farmerRepository.findById(id);
         if (existingFarmer.isPresent()) {
@@ -79,7 +73,6 @@ public class FarmerService {
         }
     }
 
-    // DELETE: Delete a Farmer by ID
     public void deleteFarmer(Long id) {
         Optional<Farmer> farmer = farmerRepository.findById(id);
         if (farmer.isPresent()) {

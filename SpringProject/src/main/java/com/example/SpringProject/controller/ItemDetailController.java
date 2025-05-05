@@ -19,8 +19,7 @@ public class ItemDetailController {
     @Autowired
     private ItemDetailService itemDetailService;
 
-    // POST: Create a new ItemDetail
-    @PostMapping("/{loadWeightId}") //added loadWeightId
+    @PostMapping("/{loadWeightId}")
     public ResponseEntity<ItemDetailResponseDTO> createItemDetail(
             @PathVariable Long loadWeightId,
             @Valid @RequestBody ItemDetailRequestDTO itemDetailRequestDTO) {
@@ -28,7 +27,6 @@ public class ItemDetailController {
         return new ResponseEntity<>(createdItemDetail, HttpStatus.CREATED);
     }
 
-    // GET: Get all ItemDetails
     @GetMapping
     public ResponseEntity<List<ItemDetailResponseDTO>> getAllItemDetails() {
         List<ItemDetailResponseDTO> itemDetails = itemDetailService.getAllItemDetails();
@@ -47,7 +45,6 @@ public class ItemDetailController {
         }
     }
 
-    // PUT: Update an ItemDetail by ID
     @PutMapping("/{id}")
     public ResponseEntity<ItemDetailResponseDTO> updateItemDetail(@PathVariable Long id, @Valid @RequestBody ItemDetailRequestDTO itemDetailRequestDTO) {
         try {
@@ -58,7 +55,6 @@ public class ItemDetailController {
         }
     }
 
-    // DELETE: Delete an ItemDetail by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteItemDetail(@PathVariable Long id) {
         try {

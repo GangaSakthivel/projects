@@ -20,21 +20,18 @@ public class LoadWeightController {
     @Autowired
     private LoadWeightService loadWeightService;
 
-    // POST: Create a new LoadWeight
     @PostMapping
     public ResponseEntity<LoadWeightResponseDTO> createLoadWeight(@Valid @RequestBody LoadWeightRequestDTO loadWeightRequestDTO) {
         LoadWeightResponseDTO createdLoadWeight = loadWeightService.createLoadWeight(loadWeightRequestDTO);
         return new ResponseEntity<>(createdLoadWeight, HttpStatus.CREATED);
     }
 
-    // GET: Get all LoadWeights
     @GetMapping
     public ResponseEntity<List<LoadWeightResponseDTO>> getAllLoadWeights() {
         List<LoadWeightResponseDTO> loadWeights = loadWeightService.getAllLoadWeights();
         return new ResponseEntity<>(loadWeights, HttpStatus.OK);
     }
 
-    // GET: Get a LoadWeight by ID
     @GetMapping("/{id}")
     public ResponseEntity<LoadWeightResponseDTO> getLoadWeightById(@PathVariable Long id) {
         try {
@@ -46,7 +43,6 @@ public class LoadWeightController {
         }
     }
 
-    // PUT: Update an existing LoadWeight
     @PutMapping("/{id}")
     public ResponseEntity<LoadWeightResponseDTO> updateLoadWeight(@PathVariable Long id, @Valid @RequestBody LoadWeightRequestDTO loadWeightRequestDTO) {
         try {
@@ -57,7 +53,6 @@ public class LoadWeightController {
         }
     }
 
-    // DELETE: Delete a LoadWeight by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLoadWeight(@PathVariable Long id) {
         try {
@@ -66,6 +61,11 @@ public class LoadWeightController {
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/by-vehicle/{vehicleNumber}")
+    public List<LoadWeightResponseDTO> getLoadWeightsByVehicleNumber(@PathVariable String vehicleNumber) {
+        return loadWeightService.getLoadWeightsByVehicleNumber(vehicleNumber);
     }
 }
 

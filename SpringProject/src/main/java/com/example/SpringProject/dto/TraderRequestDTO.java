@@ -1,26 +1,24 @@
 package com.example.SpringProject.dto;
 
-import com.example.SpringProject.model.Status; // Assuming Status is in this package
+import com.example.SpringProject.model.Status;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
-// Request DTO: What the client sends to create/update a Trader
 @Data
 public class TraderRequestDTO {
 
-    @NotBlank(message = "Trader name is required")
+    @NotBlank
     private String traderName;
 
-    @NotNull(message = "Phone number is required")
+    @NotNull
     private String phoneNumber;
 
-    @NotNull(message = "Address is required")
+    @NotNull
     private String address;
 
-    @NotNull(message = "Status is required")
+    @NotNull
     private Status status;
 }
 

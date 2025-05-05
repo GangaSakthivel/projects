@@ -19,7 +19,6 @@ public class TraderService {
     @Autowired
     private TraderRepository traderRepository;
 
-    // Helper method to convert Trader entity to TraderResponseDTO
     private TraderResponseDTO convertToResponseDTO(Trader trader) {
         TraderResponseDTO responseDTO = new TraderResponseDTO();
         responseDTO.setTraderId(trader.getTraderId());
@@ -32,19 +31,16 @@ public class TraderService {
         return responseDTO;
     }
 
-    // POST: Create a new Trader
     public TraderResponseDTO createTrader(TraderRequestDTO traderRequestDTO) {
         Trader trader = new Trader();
         trader.setTraderName(traderRequestDTO.getTraderName());
         trader.setPhoneNumber(traderRequestDTO.getPhoneNumber());
         trader.setAddress(traderRequestDTO.getAddress());
         trader.setStatus(traderRequestDTO.getStatus());
-        // createdAt and updatedAt will be handled by @PrePersist and @PreUpdate in the Entity
         Trader savedTrader = traderRepository.save(trader);
         return convertToResponseDTO(savedTrader);
     }
 
-    // GET: Get all Traders
     public List<TraderResponseDTO> getAllTraders() {
         List<Trader> traders = traderRepository.findAll();
         return traders.stream()
@@ -52,7 +48,6 @@ public class TraderService {
                 .collect(Collectors.toList());
     }
 
-    // GET: Get a Trader by ID
     public TraderResponseDTO getTraderById(Long id) {
         Optional<Trader> trader = traderRepository.findById(id);
         if (trader.isPresent()) {
@@ -79,7 +74,6 @@ public class TraderService {
         }
     }
 
-    // DELETE: Delete a Trader by ID
     public void deleteTrader(Long id) {
         Optional<Trader> trader = traderRepository.findById(id);
         if (trader.isPresent()) {

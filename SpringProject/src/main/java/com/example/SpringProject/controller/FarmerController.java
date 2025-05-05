@@ -26,26 +26,22 @@ public class FarmerController {
         return new ResponseEntity<>(createdFarmer, HttpStatus.CREATED);
     }
 
-    // GET: Get all Farmers
     @GetMapping
     public ResponseEntity<List<FarmerResponseDTO>> getAllFarmers() {
         List<FarmerResponseDTO> farmers = farmerService.getAllFarmers();
         return new ResponseEntity<>(farmers, HttpStatus.OK);
     }
 
-    // GET: Get a Farmer by ID
     @GetMapping("/{id}")
     public ResponseEntity<FarmerResponseDTO> getFarmerById(@PathVariable Long id) {
         try {
             FarmerResponseDTO farmer = farmerService.getFarmerById(id);
             return new ResponseEntity<>(farmer, HttpStatus.OK);
         } catch (ResponseStatusException e) {
-            //  Exception is already handled in the service,  just return the ResponseEntity
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Or, you could re-throw, but it's not necessary here.
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // PUT: Update a Farmer by ID
     @PutMapping("/{id}")
     public ResponseEntity<FarmerResponseDTO> updateFarmer(@PathVariable Long id, @Valid @RequestBody FarmerRequestDTO farmerRequestDTO) {
         try {
@@ -56,7 +52,6 @@ public class FarmerController {
         }
     }
 
-    // DELETE: Delete a Farmer by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFarmer(@PathVariable Long id) {
         try {

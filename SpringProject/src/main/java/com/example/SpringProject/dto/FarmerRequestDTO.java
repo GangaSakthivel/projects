@@ -1,6 +1,6 @@
 package com.example.SpringProject.dto;
 
-import com.example.SpringProject.model.Status; // Assuming Status is in this package
+import com.example.SpringProject.model.Status;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotBlank;

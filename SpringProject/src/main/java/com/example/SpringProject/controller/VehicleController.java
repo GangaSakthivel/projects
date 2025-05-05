@@ -26,14 +26,12 @@ public class VehicleController {
         return new ResponseEntity<>(createdVehicle, HttpStatus.CREATED);
     }
 
-    // GET: Get all Vehicles
     @GetMapping
     public ResponseEntity<List<VehicleResponseDTO>> getAllVehicles() {
         List<VehicleResponseDTO> vehicles = vehicleService.getAllVehicles();
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 
-    // GET: Get a Vehicle by ID
     @GetMapping("/{id}")
     public ResponseEntity<VehicleResponseDTO> getVehicleById(@PathVariable Long id) {
         try {
@@ -45,7 +43,6 @@ public class VehicleController {
         }
     }
 
-    // PUT: Update a Vehicle by ID
     @PutMapping("/{id}")
     public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequestDTO vehicleRequestDTO) {
         try {
@@ -56,7 +53,6 @@ public class VehicleController {
         }
     }
 
-    // DELETE: Delete a Vehicle by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
         try {

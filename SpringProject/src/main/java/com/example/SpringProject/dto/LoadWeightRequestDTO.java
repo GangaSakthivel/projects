@@ -10,34 +10,32 @@ import lombok.Data;
 @Data
 public class LoadWeightRequestDTO {
 
-    @NotNull(message = "Number is required")
-    @Positive(message = "Number must be positive")
+    @NotNull
+    @Positive
     private Long number;
 
-    @NotNull(message = "Empty weight is required")
-    @Positive(message = "Empty weight must be positive")
+    @NotNull
+    @Positive
     private Double empty;
 
-    @NotNull(message = "Load weight is required")
-    @Positive(message = "Load weight must be positive")
+    @NotNull
     private Double load;
 
-    @NotNull(message = "Cages is required")
-    @Positive(message = "Cages must be positive")
+    @NotNull
     private Integer cages;
 
-    @NotNull(message = "Status is required")
+    @NotNull
     private Status status;
 
-    @NotNull(message = "Farmer ID is required")
+    @NotNull
     private Long farmerId;
 
-    @NotNull(message = "Trader ID is required")
+    @NotNull
     private Long traderId;
 
-    @NotNull(message = "Vehicle ID is required")
+    @NotNull
     private Long vehicleId;
 
-    @NotNull(message = "Item details are required")
+    @NotNull
     private List<ItemDetailRequestDTO> itemDetails;
 }

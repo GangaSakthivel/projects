@@ -1,6 +1,6 @@
 package com.example.SpringProject.dto;
 
-import com.example.SpringProject.model.Status; // Assuming Status is in this package
+import com.example.SpringProject.model.Status;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ public class LoadWeightResponseDTO {
     private String traderName;
     private String traderPhoneNumber;
     private Long vehicleId;
-    private String vehicleNumber; // Add this
+    private String vehicleNumber;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Double netWeight;

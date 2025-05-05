@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "load_weight", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "number") // Add this line
+        @UniqueConstraint(columnNames = "number")
 })
 @Data
 @ToString(exclude = {"farmer", "trader", "vehicle", "itemDetails"})

@@ -19,7 +19,7 @@ public class VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
 
-    // Helper method to convert Vehicle entity to VehicleResponseDTO
+    // Vehicle entity to VehicleResponseDTO
     private VehicleResponseDTO convertToResponseDTO(Vehicle vehicle) {
         VehicleResponseDTO responseDTO = new VehicleResponseDTO();
         responseDTO.setVehicleId(vehicle.getVehicleId());
@@ -31,18 +31,15 @@ public class VehicleService {
         return responseDTO;
     }
 
-    // POST: Create a new Vehicle
     public VehicleResponseDTO createVehicle(VehicleRequestDTO vehicleRequestDTO) {
         Vehicle vehicle = new Vehicle();
         vehicle.setVehicleNumber(vehicleRequestDTO.getVehicleNumber());
         vehicle.setVehicleName(vehicleRequestDTO.getVehicleName());
         vehicle.setStatus(vehicleRequestDTO.getStatus());
-        // createdAt and updatedAt will be handled by @PrePersist and @PreUpdate in the Entity
         Vehicle savedVehicle = vehicleRepository.save(vehicle);
         return convertToResponseDTO(savedVehicle);
     }
 
-    // GET: Get all Vehicles
     public List<VehicleResponseDTO> getAllVehicles() {
         List<Vehicle> vehicles = vehicleRepository.findAll();
         return vehicles.stream()
@@ -50,7 +47,6 @@ public class VehicleService {
                 .collect(Collectors.toList());
     }
 
-    // GET: Get a Vehicle by ID
     public VehicleResponseDTO getVehicleById(Long id) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
         if (vehicle.isPresent()) {
@@ -60,7 +56,6 @@ public class VehicleService {
         }
     }
 
-    // PUT: Update a Vehicle by ID
     public VehicleResponseDTO updateVehicle(Long id, VehicleRequestDTO vehicleRequestDTO) {
         Optional<Vehicle> existingVehicle = vehicleRepository.findById(id);
         if (existingVehicle.isPresent()) {
@@ -68,7 +63,6 @@ public class VehicleService {
             vehicleToUpdate.setVehicleNumber(vehicleRequestDTO.getVehicleNumber());
             vehicleToUpdate.setVehicleName(vehicleRequestDTO.getVehicleName());
             vehicleToUpdate.setStatus(vehicleRequestDTO.getStatus());
-            // updatedAt will be handled by @PreUpdate in the Entity
             Vehicle updatedVehicle = vehicleRepository.save(vehicleToUpdate);
             return convertToResponseDTO(updatedVehicle);
         } else {
@@ -76,7 +70,6 @@ public class VehicleService {
         }
     }
 
-    // DELETE: Delete a Vehicle by ID
     public void deleteVehicle(Long id) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
         if (vehicle.isPresent()) {
