@@ -1,16 +1,9 @@
 package com.example.SpringProject.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "farmers")
@@ -24,9 +17,9 @@ public class Farmer {
     private String name;
 
     @NotNull
-    private Long phoneNumber;
+    private String phoneNumber;
 
-    @NotBlank
+    @NotNull
     private String address;
 
     @Enumerated(EnumType.STRING)
@@ -38,10 +31,6 @@ public class Farmer {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
-    @OneToMany(mappedBy = "farmer", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<LoadWeight> loadWeights;
 
     @PrePersist
     protected void onCreate() {
@@ -57,7 +46,7 @@ public class Farmer {
     public Farmer() {
     }
 
-    public Farmer(Long id, String name, Long phoneNumber, String address, Status status, LocalDateTime createdAt, LocalDateTime updatedAt, List<LoadWeight> loadWeights) {
+    public Farmer(Long id, String name, String phoneNumber, String address, Status status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -65,7 +54,6 @@ public class Farmer {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.loadWeights = loadWeights;
     }
 
     public Long getId() {
@@ -84,11 +72,11 @@ public class Farmer {
         this.name = name;
     }
 
-    public Long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -122,13 +110,5 @@ public class Farmer {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public List<LoadWeight> getLoadWeights() {
-        return loadWeights;
-    }
-
-    public void setLoadWeights(List<LoadWeight> loadWeights) {
-        this.loadWeights = loadWeights;
     }
 }

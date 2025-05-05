@@ -33,10 +33,6 @@ public class Vehicle {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "vehicle")
-    @JsonIgnore
-    private List<LoadWeight> loadWeights;
-
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -48,17 +44,17 @@ public class Vehicle {
         updatedAt = LocalDateTime.now();
     }
 
+
     public Vehicle() {
     }
 
-    public Vehicle(Long vehicleId, String vehicleNumber, String vehicleName, Status status, LocalDateTime createdAt, LocalDateTime updatedAt, List<LoadWeight> loadWeights) {
+    public Vehicle(Long vehicleId, String vehicleNumber, String vehicleName, Status status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.vehicleId = vehicleId;
         this.vehicleNumber = vehicleNumber;
         this.vehicleName = vehicleName;
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.loadWeights = loadWeights;
     }
 
     public Long getVehicleId() {
@@ -107,13 +103,5 @@ public class Vehicle {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public List<LoadWeight> getLoadWeights() {
-        return loadWeights;
-    }
-
-    public void setLoadWeights(List<LoadWeight> loadWeights) {
-        this.loadWeights = loadWeights;
     }
 }

@@ -1,49 +1,72 @@
 package com.example.SpringProject.controller;
 
-import com.example.SpringProject.model.ItemDetail;
-import com.example.SpringProject.model.LoadWeight;
+import com.example.SpringProject.dto.ItemDetailRequestDTO;
+import com.example.SpringProject.dto.ItemDetailResponseDTO;
 import com.example.SpringProject.service.ItemDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/item-details")
+@RequestMapping("/api/item-details")
 public class ItemDetailController {
 
     @Autowired
     private ItemDetailService itemDetailService;
 
-    @PostMapping("/{loadWeightId}")
-    public ResponseEntity<ItemDetail> create(@PathVariable Long loadWeightId, @RequestBody ItemDetail itemDetail) {
-        return ResponseEntity.ok(itemDetailService.createItemDetail(loadWeightId, itemDetail));
+    // POST: Create a new ItemDetail
+    @PostMapping("/{loadWeightId}") //added loadWeightId
+    public ResponseEntity<ItemDetailResponseDTO> createItemDetail(
+            @PathVariable Long loadWeightId,
+            @Valid @RequestBody ItemDetailRequestDTO itemDetailRequestDTO) {
+        ItemDetailResponseDTO createdItemDetail = itemDetailService.createItemDetail(itemDetailRequestDTO, loadWeightId);
+        return new ResponseEntity<>(createdItemDetail, HttpStatus.CREATED);
     }
 
+    // GET: Get all ItemDetails
     @GetMapping
-    public ResponseEntity<List<ItemDetail>> getAll() {
-        return ResponseEntity.ok(itemDetailService.getAllItemDetails());
+    public ResponseEntity<List<ItemDetailResponseDTO>> getAllItemDetails() {
+        List<ItemDetailResponseDTO> itemDetails = itemDetailService.getAllItemDetails();
+        return new ResponseEntity<>(itemDetails, HttpStatus.OK);
     }
 
+    // GET: Get an ItemDetail by ID
     @GetMapping("/{id}")
-    public ResponseEntity<ItemDetail> getById(@PathVariable Long id) {
-        return itemDetailService.getItemDetailById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ItemDetailResponseDTO> getItemDetailById(@PathVariable Long id) {
+        try {
+            ItemDetailResponseDTO itemDetail = itemDetailService.getItemDetailById(id);
+            return new ResponseEntity<>(itemDetail, HttpStatus.OK);
+        } catch (ResponseStatusException e) {
+            // Exception is already handled in the service; just return the ResponseEntity
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
+    // PUT: Update an ItemDetail by ID
     @PutMapping("/{id}")
-    public ResponseEntity<ItemDetail> update(@PathVariable Long id, @RequestBody ItemDetail updated) {
-        return ResponseEntity.ok(itemDetailService.updateItemDetail(id, updated));
+    public ResponseEntity<ItemDetailResponseDTO> updateItemDetail(@PathVariable Long id, @Valid @RequestBody ItemDetailRequestDTO itemDetailRequestDTO) {
+        try {
+            ItemDetailResponseDTO updatedItemDetail = itemDetailService.updateItemDetail(id, itemDetailRequestDTO);
+            return new ResponseEntity<>(updatedItemDetail, HttpStatus.OK);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
+    // DELETE: Delete an ItemDetail by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        itemDetailService.deleteItemDetail(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteItemDetail(@PathVariable Long id) {
+        try {
+            itemDetailService.deleteItemDetail(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
-
-
-
 }
+

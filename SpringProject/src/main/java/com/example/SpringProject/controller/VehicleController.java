@@ -1,13 +1,17 @@
+
 package com.example.SpringProject.controller;
 
-import com.example.SpringProject.model.Vehicle;
+import com.example.SpringProject.dto.VehicleRequestDTO;
+import com.example.SpringProject.dto.VehicleResponseDTO;
 import com.example.SpringProject.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/vehicles")
@@ -17,31 +21,49 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @PostMapping
-    public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
-        return ResponseEntity.ok(vehicleService.createVehicle(vehicle));
+    public ResponseEntity<VehicleResponseDTO> createVehicle(@Valid @RequestBody VehicleRequestDTO vehicleRequestDTO) {
+        VehicleResponseDTO createdVehicle = vehicleService.createVehicle(vehicleRequestDTO);
+        return new ResponseEntity<>(createdVehicle, HttpStatus.CREATED);
     }
 
+    // GET: Get all Vehicles
     @GetMapping
-    public ResponseEntity<List<Vehicle>> getAllVehicles() {
-        return ResponseEntity.ok(vehicleService.getAllVehicles());
+    public ResponseEntity<List<VehicleResponseDTO>> getAllVehicles() {
+        List<VehicleResponseDTO> vehicles = vehicleService.getAllVehicles();
+        return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 
+    // GET: Get a Vehicle by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long id) {
-        Optional<Vehicle> vehicle = vehicleService.getVehicleById(id);
-        return vehicle.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<VehicleResponseDTO> getVehicleById(@PathVariable Long id) {
+        try {
+            VehicleResponseDTO vehicle = vehicleService.getVehicleById(id);
+            return new ResponseEntity<>(vehicle, HttpStatus.OK);
+        } catch (ResponseStatusException e) {
+            // Exception is already handled in the service; just return the ResponseEntity
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    // Update Vehicle details
+    // PUT: Update a Vehicle by ID
     @PutMapping("/{id}")
-    public ResponseEntity<Vehicle> updateVehicle(@PathVariable Long id, @RequestBody Vehicle updatedVehicle) {
-        Vehicle updated = vehicleService.updateVehicle(id, updatedVehicle);
-        return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
+    public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequestDTO vehicleRequestDTO) {
+        try {
+            VehicleResponseDTO updatedVehicle = vehicleService.updateVehicle(id, vehicleRequestDTO);
+            return new ResponseEntity<>(updatedVehicle, HttpStatus.OK);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
+    // DELETE: Delete a Vehicle by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
-        vehicleService.deleteVehicle(id);
-        return ResponseEntity.noContent().build();
+        try {
+            vehicleService.deleteVehicle(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.example.SpringProject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +21,7 @@ public class Trader {
     private String traderName;
 
     @Column(name = "phone_number", nullable = false)
-    private Long phoneNumber;
+    private String phoneNumber;
 
     @Column(name = "address", nullable = false)
     private String address;
@@ -29,14 +31,13 @@ public class Trader {
     private Status status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "trader")
-    @JsonIgnore
-    private List<LoadWeight> loadWeights;
 
     @PrePersist
     protected void onCreate() {
@@ -52,7 +53,7 @@ public class Trader {
     public Trader() {
     }
 
-    public Trader(Long traderId, String traderName, Long phoneNumber, String address, Status status, LocalDateTime createdAt, LocalDateTime updatedAt, List<LoadWeight> loadWeights) {
+    public Trader(Long traderId, String traderName, String phoneNumber, String address, Status status, LocalDateTime createdAt, LocalDateTime updatedAt, List<LoadWeight> loadWeights) {
         this.traderId = traderId;
         this.traderName = traderName;
         this.phoneNumber = phoneNumber;
@@ -60,7 +61,6 @@ public class Trader {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.loadWeights = loadWeights;
     }
 
     public Long getTraderId() {
@@ -79,11 +79,11 @@ public class Trader {
         this.traderName = traderName;
     }
 
-    public Long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -117,13 +117,5 @@ public class Trader {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public List<LoadWeight> getLoadWeights() {
-        return loadWeights;
-    }
-
-    public void setLoadWeights(List<LoadWeight> loadWeights) {
-        this.loadWeights = loadWeights;
     }
 }

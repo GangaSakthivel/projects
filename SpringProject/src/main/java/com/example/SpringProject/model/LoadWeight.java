@@ -7,9 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
+
 @Entity
 @Table(name = "load_weight")
 public class LoadWeight {
@@ -27,16 +25,17 @@ public class LoadWeight {
     @Column(nullable = false)
     private Double load;
 
+    @Column(nullable = false)
+    private Integer cages;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
 
-
     @ManyToOne
     @JoinColumn(name = "farmer_id")
-    @JsonIgnore
+    @JsonIgnore  // Keep this, as it prevents infinite recursion
     private Farmer farmer;
-
 
     @ManyToOne
     @JoinColumn(name = "trader_id", nullable = false)
@@ -50,9 +49,11 @@ public class LoadWeight {
     private List<ItemDetail> itemDetails = new ArrayList<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)  // Add this for LocalDateTime
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)  // Add this for LocalDateTime
     private LocalDateTime updatedAt;
 
     @PrePersist
@@ -73,18 +74,19 @@ public class LoadWeight {
     public LoadWeight() {
     }
 
-    public LoadWeight(Long id, Long number, Double empty, Double load, Status status, Farmer farmer, Trader trader, Vehicle vehicle, LocalDateTime createdAt, LocalDateTime updatedAt, List<ItemDetail> itemDetails) {
+    public LoadWeight(Long id, Long number, Double empty, Double load, Integer cages, Status status, Farmer farmer, Trader trader, Vehicle vehicle, List<ItemDetail> itemDetails, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.number = number;
         this.empty = empty;
         this.load = load;
+        this.cages = cages;
         this.status = status;
         this.farmer = farmer;
         this.trader = trader;
         this.vehicle = vehicle;
+        this.itemDetails = itemDetails;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.itemDetails = itemDetails;
     }
 
     public Long getId() {
@@ -119,6 +121,14 @@ public class LoadWeight {
         this.load = load;
     }
 
+    public Integer getCages() {
+        return cages;
+    }
+
+    public void setCages(Integer cages) {
+        this.cages = cages;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -151,6 +161,14 @@ public class LoadWeight {
         this.vehicle = vehicle;
     }
 
+    public List<ItemDetail> getItemDetails() {
+        return itemDetails;
+    }
+
+    public void setItemDetails(List<ItemDetail> itemDetails) {
+        this.itemDetails = itemDetails;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -166,12 +184,5 @@ public class LoadWeight {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    public List<ItemDetail> getItemDetails() {
-        return itemDetails;
-    }
-
-    public void setItemDetails(List<ItemDetail> itemDetails) {
-        this.itemDetails = itemDetails;
-    }
 }
+
