@@ -15,10 +15,16 @@ public class LoadWeightResponseDTO {
     private Integer cages;
     private Status status;
     private Long farmerId;
+    private String farmerName;
+    private String farmerPhoneNumber;
     private Long traderId;
+    private String traderName;
+    private String traderPhoneNumber;
     private Long vehicleId;
+    private String vehicleNumber; // Add this
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Double netWeight;
     private List<ItemDetailResponseDTO> itemDetails;
 }
 

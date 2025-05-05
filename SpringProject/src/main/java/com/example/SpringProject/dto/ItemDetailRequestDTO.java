@@ -14,3 +14,4 @@ public class ItemDetailRequestDTO {
     private int count;
 
 }
+

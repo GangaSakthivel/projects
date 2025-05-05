@@ -12,7 +12,7 @@ public enum Status {
         this.value = value;
     }
 
-    @JsonValue  //maps the enum value to the database
+    @JsonValue
     public String getValue() {
         return value;
     }

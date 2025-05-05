@@ -1,3 +1,4 @@
+
 package com.example.SpringProject.service;
 
 import com.example.SpringProject.dto.LoadWeightRequestDTO;
@@ -38,23 +39,29 @@ public class LoadWeightService {
         responseDTO.setLoad(loadWeight.getLoad());
         responseDTO.setCages(loadWeight.getCages());
         responseDTO.setStatus(loadWeight.getStatus());
-        if(loadWeight.getFarmer() != null) {  //check for null
+        if (loadWeight.getFarmer() != null) {
             responseDTO.setFarmerId(loadWeight.getFarmer().getId());
+            responseDTO.setFarmerName(loadWeight.getFarmer().getName());
+            responseDTO.setFarmerPhoneNumber(loadWeight.getFarmer().getPhoneNumber());
         }
-        if(loadWeight.getTrader() != null) { //check for null
+        if (loadWeight.getTrader() != null) {
             responseDTO.setTraderId(loadWeight.getTrader().getTraderId());
+            responseDTO.setTraderName(loadWeight.getTrader().getTraderName());
+            responseDTO.setTraderPhoneNumber(loadWeight.getTrader().getPhoneNumber());
         }
-        if(loadWeight.getVehicle() != null){ //check for null
+        if (loadWeight.getVehicle() != null) {
             responseDTO.setVehicleId(loadWeight.getVehicle().getVehicleId());
+            responseDTO.setVehicleNumber(loadWeight.getVehicle().getVehicleNumber());
         }
         responseDTO.setCreatedAt(loadWeight.getCreatedAt());
         responseDTO.setUpdatedAt(loadWeight.getUpdatedAt());
+        responseDTO.setNetWeight(loadWeight.getLoad() - loadWeight.getEmpty());
         responseDTO.setItemDetails(loadWeight.getItemDetails().stream()
                 .map(itemDetail -> {
                     ItemDetailResponseDTO itemDetailDTO = new ItemDetailResponseDTO();
                     itemDetailDTO.setId(itemDetail.getId());
                     itemDetailDTO.setValue(itemDetail.getValue());
-                    itemDetailDTO.setCount(itemDetail.getCount());
+                    itemDetailDTO.setCount(itemDetailDTO.getCount());
                     return itemDetailDTO;
                 })
                 .collect(Collectors.toList()));
@@ -63,7 +70,6 @@ public class LoadWeightService {
 
     // POST: Create a new LoadWeight
     public LoadWeightResponseDTO createLoadWeight(LoadWeightRequestDTO loadWeightRequestDTO) {
-
         // Fetch related entities, handle exceptions if not found.
         Farmer farmer = farmerRepository.findById(loadWeightRequestDTO.getFarmerId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer not found with id: " + loadWeightRequestDTO.getFarmerId()));

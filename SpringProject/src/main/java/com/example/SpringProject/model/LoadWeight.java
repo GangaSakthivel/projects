@@ -1,22 +1,27 @@
 package com.example.SpringProject.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
-@Table(name = "load_weight")
+@Table(name = "load_weight", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "number") // Add this line
+})
+@Data
+@ToString(exclude = {"farmer", "trader", "vehicle", "itemDetails"})
+@EqualsAndHashCode(exclude = {"farmer", "trader", "vehicle", "itemDetails"})
 public class LoadWeight {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Long number;
 
     @Column(nullable = false)
@@ -28,33 +33,30 @@ public class LoadWeight {
     @Column(nullable = false)
     private Integer cages;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status;
 
-    @ManyToOne
-    @JoinColumn(name = "farmer_id")
-    @JsonIgnore  // Keep this, as it prevents infinite recursion
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "farmer_id", nullable = false)
     private Farmer farmer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trader_id", nullable = false)
     private Trader trader;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
-    @OneToMany(mappedBy = "loadWeight", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<ItemDetail> itemDetails = new ArrayList<>();
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)  // Add this for LocalDateTime
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)  // Add this for LocalDateTime
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "loadWeight", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemDetail> itemDetails;
 
     @PrePersist
     protected void onCreate() {
@@ -65,124 +67,6 @@ public class LoadWeight {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    public Double getNetWeight() {
-        return load - empty;
-    }
-
-    public LoadWeight() {
-    }
-
-    public LoadWeight(Long id, Long number, Double empty, Double load, Integer cages, Status status, Farmer farmer, Trader trader, Vehicle vehicle, List<ItemDetail> itemDetails, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.number = number;
-        this.empty = empty;
-        this.load = load;
-        this.cages = cages;
-        this.status = status;
-        this.farmer = farmer;
-        this.trader = trader;
-        this.vehicle = vehicle;
-        this.itemDetails = itemDetails;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getNumber() {
-        return number;
-    }
-
-    public void setNumber(Long number) {
-        this.number = number;
-    }
-
-    public Double getEmpty() {
-        return empty;
-    }
-
-    public void setEmpty(Double empty) {
-        this.empty = empty;
-    }
-
-    public Double getLoad() {
-        return load;
-    }
-
-    public void setLoad(Double load) {
-        this.load = load;
-    }
-
-    public Integer getCages() {
-        return cages;
-    }
-
-    public void setCages(Integer cages) {
-        this.cages = cages;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Farmer getFarmer() {
-        return farmer;
-    }
-
-    public void setFarmer(Farmer farmer) {
-        this.farmer = farmer;
-    }
-
-    public Trader getTrader() {
-        return trader;
-    }
-
-    public void setTrader(Trader trader) {
-        this.trader = trader;
-    }
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
-
-    public List<ItemDetail> getItemDetails() {
-        return itemDetails;
-    }
-
-    public void setItemDetails(List<ItemDetail> itemDetails) {
-        this.itemDetails = itemDetails;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }
 
