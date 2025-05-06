@@ -40,7 +40,6 @@ public class ItemDetailController {
             ItemDetailResponseDTO itemDetail = itemDetailService.getItemDetailById(id);
             return new ResponseEntity<>(itemDetail, HttpStatus.OK);
         } catch (ResponseStatusException e) {
-            // Exception is already handled in the service; just return the ResponseEntity
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

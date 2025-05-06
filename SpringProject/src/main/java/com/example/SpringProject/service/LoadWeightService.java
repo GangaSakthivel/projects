@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,34 +51,34 @@ public class LoadWeightService {
         responseDTO.setCreatedAt(loadWeight.getCreatedAt());
         responseDTO.setUpdatedAt(loadWeight.getUpdatedAt());
 
-        // Calculate and set total net weight
-        double totalNetWeight = loadWeight.getItemDetails().stream()
-                .mapToDouble(itemDetail -> itemDetail.getValue() * itemDetail.getCount())
+        //load - empty = net weight
+        double scaleNetWeight = loadWeight.getLoad() - loadWeight.getEmpty();
+        responseDTO.setScaleNetWeight(scaleNetWeight);
+
+        List<ItemDetailResponseDTO> itemDTOs = loadWeight.getItemDetails().stream().map(item -> {
+            ItemDetailResponseDTO dto = new ItemDetailResponseDTO();
+            dto.setId(item.getId());
+            dto.setValue(item.getValue());
+            dto.setCount(item.getCount());
+            return dto;
+        }).collect(Collectors.toList());
+        responseDTO.setItemDetails(itemDTOs);
+
+        double totalNetWeight = itemDTOs.stream()
+                .mapToDouble(i -> i.getValue() * i.getCount())
                 .sum();
-
-        responseDTO.setScaleNetWeight(loadWeight.getLoad() - loadWeight.getEmpty());
         responseDTO.setTotalNetWeight(totalNetWeight);
-
-        responseDTO.setItemDetails(loadWeight.getItemDetails().stream()
-                .map(itemDetail -> {
-                    ItemDetailResponseDTO itemDetailDTO = new ItemDetailResponseDTO();
-                    itemDetailDTO.setId(itemDetail.getId());
-                    itemDetailDTO.setValue(itemDetail.getValue());
-                    itemDetailDTO.setCount(itemDetail.getCount());
-                    return itemDetailDTO;
-                })
-                .collect(Collectors.toList()));
 
         return responseDTO;
     }
 
     public LoadWeightResponseDTO createLoadWeight(LoadWeightRequestDTO dto) {
         Farmer farmer = farmerRepository.findById(dto.getFarmerId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer not found with id: " + dto.getFarmerId()));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer not found"));
         Trader trader = traderRepository.findById(dto.getTraderId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trader not found with id: " + dto.getTraderId()));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trader not found"));
         Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found with id: " + dto.getVehicleId()));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found"));
 
         LoadWeight loadWeight = new LoadWeight();
         loadWeight.setNumber(dto.getNumber());
@@ -91,22 +90,15 @@ public class LoadWeightService {
         loadWeight.setTrader(trader);
         loadWeight.setVehicle(vehicle);
 
-        List<ItemDetail> itemDetails = dto.getItemDetails().stream()
-                .map(itemDTO -> {
-                    ItemDetail item = new ItemDetail();
-                    item.setValue(itemDTO.getValue());
-                    item.setCount(itemDTO.getCount());
-                    item.setLoadWeight(loadWeight);
-                    return item;
-                }).collect(Collectors.toList());
+        List<ItemDetail> itemDetails = dto.getItemDetails().stream().map(i -> {
+            ItemDetail item = new ItemDetail();
+            item.setValue(i.getValue());
+            item.setCount(i.getCount());
+            item.setLoadWeight(loadWeight);
+            return item;
+        }).collect(Collectors.toList());
 
         loadWeight.setItemDetails(itemDetails);
-
-        double totalNetWeight = itemDetails.stream()
-                .mapToDouble(i -> i.getValue() * i.getCount())
-                .sum();
-
-        loadWeight.setNetWeight(totalNetWeight);
 
         LoadWeight saved = loadWeightRepository.save(loadWeight);
         return convertToResponseDTO(saved);
@@ -127,14 +119,14 @@ public class LoadWeightService {
 
     public LoadWeightResponseDTO updateLoadWeight(Long id, LoadWeightRequestDTO dto) {
         LoadWeight loadWeight = loadWeightRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "LoadWeight not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "LoadWeight not found"));
 
         Farmer farmer = farmerRepository.findById(dto.getFarmerId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer not found with id: " + dto.getFarmerId()));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer not found"));
         Trader trader = traderRepository.findById(dto.getTraderId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trader not found with id: " + dto.getTraderId()));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trader not found"));
         Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found with id: " + dto.getVehicleId()));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found"));
 
         loadWeight.setNumber(dto.getNumber());
         loadWeight.setEmpty(dto.getEmpty());
@@ -146,20 +138,15 @@ public class LoadWeightService {
         loadWeight.setVehicle(vehicle);
 
         loadWeight.getItemDetails().clear();
-
-        List<ItemDetail> updatedItems = dto.getItemDetails().stream()
-                .map(i -> {
-                    ItemDetail item = new ItemDetail();
-                    item.setValue(i.getValue());
-                    item.setCount(i.getCount());
-                    item.setLoadWeight(loadWeight);
-                    return item;
-                }).collect(Collectors.toList());
+        List<ItemDetail> updatedItems = dto.getItemDetails().stream().map(i -> {
+            ItemDetail item = new ItemDetail();
+            item.setValue(i.getValue());
+            item.setCount(i.getCount());
+            item.setLoadWeight(loadWeight);
+            return item;
+        }).collect(Collectors.toList());
 
         loadWeight.getItemDetails().addAll(updatedItems);
-
-        loadWeight.setTotalItemCount(updatedItems.stream().mapToInt(ItemDetail::getCount).sum());
-        loadWeight.setNetWeight(updatedItems.stream().mapToDouble(i -> i.getValue() * i.getCount()).sum());
 
         LoadWeight updated = loadWeightRepository.save(loadWeight);
         return convertToResponseDTO(updated);

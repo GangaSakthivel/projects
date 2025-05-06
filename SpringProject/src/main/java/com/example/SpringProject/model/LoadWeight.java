@@ -13,8 +13,8 @@ import java.util.List;
         @UniqueConstraint(columnNames = "number")
 })
 @Data
-@ToString(exclude = {"farmer", "trader", "vehicle", "itemDetails"})
-@EqualsAndHashCode(exclude = {"farmer", "trader", "vehicle", "itemDetails"})
+//@ToString(exclude = {"farmer", "trader", "vehicle", "itemDetails"})
+//@EqualsAndHashCode(exclude = {"farmer", "trader", "vehicle", "itemDetails"})
 public class LoadWeight {
 
     @Id
@@ -27,16 +27,11 @@ public class LoadWeight {
     @Column(nullable = false)
     private Double empty;
 
-    private double netWeight;
-
     @Column(nullable = false)
     private Double load;
 
     @Column(nullable = false)
     private Integer cages;
-
-    private Integer totalItemCount;
-
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

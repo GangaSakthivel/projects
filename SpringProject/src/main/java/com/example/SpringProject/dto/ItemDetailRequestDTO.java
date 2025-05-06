@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 public class ItemDetailRequestDTO {
 
-    @NotNull(message = "Value is required")
+    @NotNull
     private Double value;
 
-    @NotNull(message = "Count is required")
+    @NotNull
     private int count;
 
 }
