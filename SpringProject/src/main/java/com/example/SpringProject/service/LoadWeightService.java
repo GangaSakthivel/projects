@@ -1,10 +1,9 @@
-
 package com.example.SpringProject.service;
 
 import com.example.SpringProject.dto.ItemDetailRequestDTO;
+import com.example.SpringProject.dto.ItemDetailResponseDTO;
 import com.example.SpringProject.dto.LoadWeightRequestDTO;
 import com.example.SpringProject.dto.LoadWeightResponseDTO;
-import com.example.SpringProject.dto.ItemDetailResponseDTO;
 import com.example.SpringProject.model.*;
 import com.example.SpringProject.repository.FarmerRepository;
 import com.example.SpringProject.repository.TraderRepository;
@@ -30,6 +29,7 @@ public class LoadWeightService {
 
     @Autowired
     private TraderRepository traderRepository;
+
     @Autowired
     private VehicleRepository vehicleRepository;
 
@@ -41,142 +41,144 @@ public class LoadWeightService {
         responseDTO.setLoad(loadWeight.getLoad());
         responseDTO.setCages(loadWeight.getCages());
         responseDTO.setStatus(loadWeight.getStatus());
-        if (loadWeight.getFarmer() != null) {
-            responseDTO.setFarmerId(loadWeight.getFarmer().getId());
-            responseDTO.setFarmerName(loadWeight.getFarmer().getName());
-            responseDTO.setFarmerPhoneNumber(loadWeight.getFarmer().getPhoneNumber());
-        }
-        if (loadWeight.getTrader() != null) {
-            responseDTO.setTraderId(loadWeight.getTrader().getTraderId());
-            responseDTO.setTraderName(loadWeight.getTrader().getTraderName());
-            responseDTO.setTraderPhoneNumber(loadWeight.getTrader().getPhoneNumber());
-        }
-        if (loadWeight.getVehicle() != null) {
-            responseDTO.setVehicleId(loadWeight.getVehicle().getVehicleId());
-            responseDTO.setVehicleNumber(loadWeight.getVehicle().getVehicleNumber());
-        }
+        responseDTO.setFarmerId(loadWeight.getFarmer().getId());
+        responseDTO.setFarmerName(loadWeight.getFarmer().getName());
+        responseDTO.setFarmerPhoneNumber(loadWeight.getFarmer().getPhoneNumber());
+        responseDTO.setTraderId(loadWeight.getTrader().getTraderId());
+        responseDTO.setTraderName(loadWeight.getTrader().getTraderName());
+        responseDTO.setTraderPhoneNumber(loadWeight.getTrader().getPhoneNumber());
+        responseDTO.setVehicleId(loadWeight.getVehicle().getVehicleId());
+        responseDTO.setVehicleNumber(loadWeight.getVehicle().getVehicleNumber());
         responseDTO.setCreatedAt(loadWeight.getCreatedAt());
         responseDTO.setUpdatedAt(loadWeight.getUpdatedAt());
-        responseDTO.setNetWeight(loadWeight.getLoad() - loadWeight.getEmpty());
+
+        // Calculate and set total net weight
+        double totalNetWeight = loadWeight.getItemDetails().stream()
+                .mapToDouble(itemDetail -> itemDetail.getValue() * itemDetail.getCount())
+                .sum();
+
+        responseDTO.setScaleNetWeight(loadWeight.getLoad() - loadWeight.getEmpty());
+        responseDTO.setTotalNetWeight(totalNetWeight);
+
         responseDTO.setItemDetails(loadWeight.getItemDetails().stream()
                 .map(itemDetail -> {
                     ItemDetailResponseDTO itemDetailDTO = new ItemDetailResponseDTO();
                     itemDetailDTO.setId(itemDetail.getId());
                     itemDetailDTO.setValue(itemDetail.getValue());
-                    itemDetailDTO.setCount(itemDetailDTO.getCount());
+                    itemDetailDTO.setCount(itemDetail.getCount());
                     return itemDetailDTO;
                 })
                 .collect(Collectors.toList()));
+
         return responseDTO;
     }
 
-    public LoadWeightResponseDTO createLoadWeight(LoadWeightRequestDTO loadWeightRequestDTO) {
-        // Fetch related entities, handle exceptions if not found.
-        Farmer farmer = farmerRepository.findById(loadWeightRequestDTO.getFarmerId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer not found with id: " + loadWeightRequestDTO.getFarmerId()));
-        Trader trader = traderRepository.findById(loadWeightRequestDTO.getTraderId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trader not found with id: " + loadWeightRequestDTO.getTraderId()));
-        Vehicle vehicle = vehicleRepository.findById(loadWeightRequestDTO.getVehicleId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found with id: " + loadWeightRequestDTO.getVehicleId()));
+    public LoadWeightResponseDTO createLoadWeight(LoadWeightRequestDTO dto) {
+        Farmer farmer = farmerRepository.findById(dto.getFarmerId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer not found with id: " + dto.getFarmerId()));
+        Trader trader = traderRepository.findById(dto.getTraderId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trader not found with id: " + dto.getTraderId()));
+        Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found with id: " + dto.getVehicleId()));
 
         LoadWeight loadWeight = new LoadWeight();
-        loadWeight.setNumber(loadWeightRequestDTO.getNumber());
-        loadWeight.setEmpty(loadWeightRequestDTO.getEmpty());
-        loadWeight.setLoad(loadWeightRequestDTO.getLoad());
-        loadWeight.setCages(loadWeightRequestDTO.getCages());
-        loadWeight.setStatus(loadWeightRequestDTO.getStatus());
+        loadWeight.setNumber(dto.getNumber());
+        loadWeight.setEmpty(dto.getEmpty());
+        loadWeight.setLoad(dto.getLoad());
+        loadWeight.setCages(dto.getCages());
+        loadWeight.setStatus(dto.getStatus());
         loadWeight.setFarmer(farmer);
         loadWeight.setTrader(trader);
         loadWeight.setVehicle(vehicle);
 
-        List<ItemDetail> itemDetails = loadWeightRequestDTO.getItemDetails().stream()
-                .map(itemDetailDTO -> {
-                    ItemDetail itemDetail = new ItemDetail();
-                    itemDetail.setValue(itemDetailDTO.getValue());
-                    itemDetail.setCount(itemDetailDTO.getCount());
-                    itemDetail.setLoadWeight(loadWeight);
-                    return itemDetail;
-                })
-                .collect(Collectors.toList());
+        List<ItemDetail> itemDetails = dto.getItemDetails().stream()
+                .map(itemDTO -> {
+                    ItemDetail item = new ItemDetail();
+                    item.setValue(itemDTO.getValue());
+                    item.setCount(itemDTO.getCount());
+                    item.setLoadWeight(loadWeight);
+                    return item;
+                }).collect(Collectors.toList());
+
         loadWeight.setItemDetails(itemDetails);
 
-        LoadWeight savedLoadWeight = loadWeightRepository.save(loadWeight);
-        return convertToResponseDTO(savedLoadWeight);
+        double totalNetWeight = itemDetails.stream()
+                .mapToDouble(i -> i.getValue() * i.getCount())
+                .sum();
+
+        loadWeight.setNetWeight(totalNetWeight);
+
+        LoadWeight saved = loadWeightRepository.save(loadWeight);
+        return convertToResponseDTO(saved);
     }
 
     public List<LoadWeightResponseDTO> getAllLoadWeights() {
-        List<LoadWeight> loadWeights = loadWeightRepository.findAll();
-        return loadWeights.stream()
+        return loadWeightRepository.findAll()
+                .stream()
                 .map(this::convertToResponseDTO)
                 .collect(Collectors.toList());
     }
 
     public LoadWeightResponseDTO getLoadWeightById(Long id) {
-        Optional<LoadWeight> loadWeight = loadWeightRepository.findById(id);
-        if (loadWeight.isPresent()) {
-            return convertToResponseDTO(loadWeight.get());
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "LoadWeight not found with id: " + id);
-        }
+        LoadWeight lw = loadWeightRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "LoadWeight not found with id: " + id));
+        return convertToResponseDTO(lw);
     }
 
-    public LoadWeightResponseDTO updateLoadWeight(Long id, LoadWeightRequestDTO loadWeightRequestDTO) {
-        LoadWeight loadWeightToUpdate = loadWeightRepository.findById(id)
+    public LoadWeightResponseDTO updateLoadWeight(Long id, LoadWeightRequestDTO dto) {
+        LoadWeight loadWeight = loadWeightRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "LoadWeight not found with id: " + id));
 
-        Farmer farmer = farmerRepository.findById(loadWeightRequestDTO.getFarmerId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer not found with id: " + loadWeightRequestDTO.getFarmerId()));
-        Trader trader = traderRepository.findById(loadWeightRequestDTO.getTraderId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trader not found with id: " + loadWeightRequestDTO.getTraderId()));
-        Vehicle vehicle = vehicleRepository.findById(loadWeightRequestDTO.getVehicleId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found with id: " + loadWeightRequestDTO.getVehicleId()));
+        Farmer farmer = farmerRepository.findById(dto.getFarmerId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer not found with id: " + dto.getFarmerId()));
+        Trader trader = traderRepository.findById(dto.getTraderId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trader not found with id: " + dto.getTraderId()));
+        Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found with id: " + dto.getVehicleId()));
 
-        loadWeightToUpdate.setNumber(loadWeightRequestDTO.getNumber());
-        loadWeightToUpdate.setEmpty(loadWeightRequestDTO.getEmpty());
-        loadWeightToUpdate.setLoad(loadWeightRequestDTO.getLoad());
-        loadWeightToUpdate.setCages(loadWeightRequestDTO.getCages());
-        loadWeightToUpdate.setStatus(loadWeightRequestDTO.getStatus());
-        loadWeightToUpdate.setFarmer(farmer);
-        loadWeightToUpdate.setTrader(trader);
-        loadWeightToUpdate.setVehicle(vehicle);
+        loadWeight.setNumber(dto.getNumber());
+        loadWeight.setEmpty(dto.getEmpty());
+        loadWeight.setLoad(dto.getLoad());
+        loadWeight.setCages(dto.getCages());
+        loadWeight.setStatus(dto.getStatus());
+        loadWeight.setFarmer(farmer);
+        loadWeight.setTrader(trader);
+        loadWeight.setVehicle(vehicle);
 
-        loadWeightToUpdate.getItemDetails().clear();
+        loadWeight.getItemDetails().clear();
 
-        for (ItemDetailRequestDTO itemDetailDTO : loadWeightRequestDTO.getItemDetails()) {
-            ItemDetail itemDetail = new ItemDetail();
-            itemDetail.setValue(itemDetailDTO.getValue());
-            itemDetail.setCount(itemDetailDTO.getCount());
-            itemDetail.setLoadWeight(loadWeightToUpdate); //parent reference
-            loadWeightToUpdate.getItemDetails().add(itemDetail);
-        }
+        List<ItemDetail> updatedItems = dto.getItemDetails().stream()
+                .map(i -> {
+                    ItemDetail item = new ItemDetail();
+                    item.setValue(i.getValue());
+                    item.setCount(i.getCount());
+                    item.setLoadWeight(loadWeight);
+                    return item;
+                }).collect(Collectors.toList());
 
-        // Save the updatd LoadWeight entity
-        LoadWeight updatedLoadWeight = loadWeightRepository.save(loadWeightToUpdate);
+        loadWeight.getItemDetails().addAll(updatedItems);
 
-        // Convert to response dto and return
-        return convertToResponseDTO(updatedLoadWeight);
+        loadWeight.setTotalItemCount(updatedItems.stream().mapToInt(ItemDetail::getCount).sum());
+        loadWeight.setNetWeight(updatedItems.stream().mapToDouble(i -> i.getValue() * i.getCount()).sum());
+
+        LoadWeight updated = loadWeightRepository.save(loadWeight);
+        return convertToResponseDTO(updated);
     }
-
 
     public void deleteLoadWeight(Long id) {
-        Optional<LoadWeight> loadWeight = loadWeightRepository.findById(id);
-        if (loadWeight.isPresent()) {
-            loadWeightRepository.deleteById(id);
-        } else {
+        if (!loadWeightRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "LoadWeight not found with id: " + id);
         }
+        loadWeightRepository.deleteById(id);
     }
 
-    //get by vehicle id
     public List<LoadWeightResponseDTO> getLoadWeightsByVehicleNumber(String vehicleNumber) {
         List<LoadWeight> loadWeights = loadWeightRepository.findByVehicleVehicleNumber(vehicleNumber);
-        if (loadWeights != null && !loadWeights.isEmpty()) {
-            return loadWeights.stream()
-                    .map(this::convertToResponseDTO)
-                    .collect(Collectors.toList());
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "LoadWeight data not found for vehicle number: " + vehicleNumber);
+        if (loadWeights == null || loadWeights.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No data found for vehicle number: " + vehicleNumber);
         }
+        return loadWeights.stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
     }
 }
-

@@ -27,11 +27,16 @@ public class LoadWeight {
     @Column(nullable = false)
     private Double empty;
 
+    private double netWeight;
+
     @Column(nullable = false)
     private Double load;
 
     @Column(nullable = false)
     private Integer cages;
+
+    private Integer totalItemCount;
+
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

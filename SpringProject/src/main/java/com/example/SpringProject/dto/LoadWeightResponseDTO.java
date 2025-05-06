@@ -24,7 +24,8 @@ public class LoadWeightResponseDTO {
     private String vehicleNumber;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Double netWeight;
+    private double TotalNetWeight;
+    private double scaleNetWeight;
     private List<ItemDetailResponseDTO> itemDetails;
 }
 
