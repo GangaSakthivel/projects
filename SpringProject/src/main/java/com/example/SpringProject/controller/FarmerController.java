@@ -19,8 +19,7 @@ public class FarmerController {
     @Autowired
     private FarmerService farmerService;
 
-    // POST: Create a new Farmer
-    @PostMapping
+    @PostMapping("/input-farmer")
     public ResponseEntity<FarmerResponseDTO> createFarmer(@Valid @RequestBody FarmerRequestDTO farmerRequestDTO) {
         FarmerResponseDTO createdFarmer = farmerService.createFarmer(farmerRequestDTO);
         return new ResponseEntity<>(createdFarmer, HttpStatus.CREATED);

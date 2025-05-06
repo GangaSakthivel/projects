@@ -33,7 +33,6 @@ public class ItemDetailController {
         return new ResponseEntity<>(itemDetails, HttpStatus.OK);
     }
 
-    // GET: Get an ItemDetail by ID
     @GetMapping("/{id}")
     public ResponseEntity<ItemDetailResponseDTO> getItemDetailById(@PathVariable Long id) {
         try {

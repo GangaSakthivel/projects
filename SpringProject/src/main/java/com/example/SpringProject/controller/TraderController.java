@@ -20,28 +20,24 @@ public class TraderController {
     @Autowired
     private TraderService traderService;
 
-    // POST: Create a new Trader
     @PostMapping
     public ResponseEntity<TraderResponseDTO> createTrader(@Valid @RequestBody TraderRequestDTO traderRequestDTO) {
         TraderResponseDTO createdTrader = traderService.createTrader(traderRequestDTO);
         return new ResponseEntity<>(createdTrader, HttpStatus.CREATED);
     }
 
-    // GET: Get all Traders
     @GetMapping
     public ResponseEntity<List<TraderResponseDTO>> getAllTraders() {
         List<TraderResponseDTO> traders = traderService.getAllTraders();
         return new ResponseEntity<>(traders, HttpStatus.OK);
     }
 
-    // GET: Get a Trader by ID
     @GetMapping("/{id}")
     public ResponseEntity<TraderResponseDTO> getTraderById(@PathVariable Long id) {
         try {
             TraderResponseDTO trader = traderService.getTraderById(id);
             return new ResponseEntity<>(trader, HttpStatus.OK);
         } catch (ResponseStatusException e) {
-            // Exception is already handled in the service; just return the ResponseEntity
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
