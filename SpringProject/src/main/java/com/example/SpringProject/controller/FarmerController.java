@@ -19,13 +19,13 @@ public class FarmerController {
     @Autowired
     private FarmerService farmerService;
 
-    @PostMapping("/input-farmer")
+    @PostMapping("/add-farmer")
     public ResponseEntity<FarmerResponseDTO> createFarmer(@Valid @RequestBody FarmerRequestDTO farmerRequestDTO) {
         FarmerResponseDTO createdFarmer = farmerService.createFarmer(farmerRequestDTO);
         return new ResponseEntity<>(createdFarmer, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/get-farmers")
     public ResponseEntity<List<FarmerResponseDTO>> getAllFarmers() {
         List<FarmerResponseDTO> farmers = farmerService.getAllFarmers();
         return new ResponseEntity<>(farmers, HttpStatus.OK);
@@ -41,7 +41,7 @@ public class FarmerController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<FarmerResponseDTO> updateFarmer(@PathVariable Long id, @Valid @RequestBody FarmerRequestDTO farmerRequestDTO) {
         try {
             FarmerResponseDTO updatedFarmer = farmerService.updateFarmer(id, farmerRequestDTO);

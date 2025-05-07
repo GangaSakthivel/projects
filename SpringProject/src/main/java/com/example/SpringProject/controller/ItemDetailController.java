@@ -27,7 +27,7 @@ public class ItemDetailController {
         return new ResponseEntity<>(createdItemDetail, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("get-itemDetails")
     public ResponseEntity<List<ItemDetailResponseDTO>> getAllItemDetails() {
         List<ItemDetailResponseDTO> itemDetails = itemDetailService.getAllItemDetails();
         return new ResponseEntity<>(itemDetails, HttpStatus.OK);
@@ -43,7 +43,7 @@ public class ItemDetailController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<ItemDetailResponseDTO> updateItemDetail(@PathVariable Long id, @Valid @RequestBody ItemDetailRequestDTO itemDetailRequestDTO) {
         try {
             ItemDetailResponseDTO updatedItemDetail = itemDetailService.updateItemDetail(id, itemDetailRequestDTO);

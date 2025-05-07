@@ -20,13 +20,13 @@ public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
 
-    @PostMapping
+    @PostMapping("/add-vehicle")
     public ResponseEntity<VehicleResponseDTO> createVehicle(@Valid @RequestBody VehicleRequestDTO vehicleRequestDTO) {
         VehicleResponseDTO createdVehicle = vehicleService.createVehicle(vehicleRequestDTO);
         return new ResponseEntity<>(createdVehicle, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/get-vehicles")
     public ResponseEntity<List<VehicleResponseDTO>> getAllVehicles() {
         List<VehicleResponseDTO> vehicles = vehicleService.getAllVehicles();
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
@@ -43,7 +43,7 @@ public class VehicleController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<VehicleResponseDTO> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequestDTO vehicleRequestDTO) {
         try {
             VehicleResponseDTO updatedVehicle = vehicleService.updateVehicle(id, vehicleRequestDTO);

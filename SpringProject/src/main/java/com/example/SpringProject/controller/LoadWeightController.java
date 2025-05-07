@@ -20,13 +20,13 @@ public class LoadWeightController {
     @Autowired
     private LoadWeightService loadWeightService;
 
-    @PostMapping
+    @PostMapping("/add/load-weight")
     public ResponseEntity<LoadWeightResponseDTO> createLoadWeight(@Valid @RequestBody LoadWeightRequestDTO loadWeightRequestDTO) {
         LoadWeightResponseDTO createdLoadWeight = loadWeightService.createLoadWeight(loadWeightRequestDTO);
         return new ResponseEntity<>(createdLoadWeight, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("get/load-weights")
     public ResponseEntity<List<LoadWeightResponseDTO>> getAllLoadWeights() {
         List<LoadWeightResponseDTO> loadWeights = loadWeightService.getAllLoadWeights();
         return new ResponseEntity<>(loadWeights, HttpStatus.OK);
@@ -38,12 +38,11 @@ public class LoadWeightController {
             LoadWeightResponseDTO loadWeight = loadWeightService.getLoadWeightById(id);
             return new ResponseEntity<>(loadWeight, HttpStatus.OK);
         } catch (ResponseStatusException e) {
-            // Exception is already handled in the service; just return the ResponseEntity
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<LoadWeightResponseDTO> updateLoadWeight(@PathVariable Long id, @Valid @RequestBody LoadWeightRequestDTO loadWeightRequestDTO) {
         try {
             LoadWeightResponseDTO updatedLoadWeight = loadWeightService.updateLoadWeight(id, loadWeightRequestDTO);
@@ -63,7 +62,7 @@ public class LoadWeightController {
         }
     }
 
-    @GetMapping("/by-vehicle/{vehicleNumber}")
+    @GetMapping("/by-vehicle-number/{vehicleNumber}")
     public List<LoadWeightResponseDTO> getLoadWeightsByVehicleNumber(@PathVariable String vehicleNumber) {
         return loadWeightService.getLoadWeightsByVehicleNumber(vehicleNumber);
     }

@@ -20,19 +20,19 @@ public class TraderController {
     @Autowired
     private TraderService traderService;
 
-    @PostMapping
+    @PostMapping("/add-trader")
     public ResponseEntity<TraderResponseDTO> createTrader(@Valid @RequestBody TraderRequestDTO traderRequestDTO) {
         TraderResponseDTO createdTrader = traderService.createTrader(traderRequestDTO);
         return new ResponseEntity<>(createdTrader, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/get-traders")
     public ResponseEntity<List<TraderResponseDTO>> getAllTraders() {
         List<TraderResponseDTO> traders = traderService.getAllTraders();
         return new ResponseEntity<>(traders, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get-trader/{id}")
     public ResponseEntity<TraderResponseDTO> getTraderById(@PathVariable Long id) {
         try {
             TraderResponseDTO trader = traderService.getTraderById(id);
@@ -42,8 +42,7 @@ public class TraderController {
         }
     }
 
-    // PUT: Update a Trader by ID
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<TraderResponseDTO> updateTrader(@PathVariable Long id, @Valid @RequestBody TraderRequestDTO traderRequestDTO) {
         try {
             TraderResponseDTO updatedTrader = traderService.updateTrader(id, traderRequestDTO);
@@ -53,7 +52,6 @@ public class TraderController {
         }
     }
 
-    // DELETE: Delete a Trader by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTrader(@PathVariable Long id) {
         try {
