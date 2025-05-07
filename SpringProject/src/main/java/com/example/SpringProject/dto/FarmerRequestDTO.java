@@ -9,16 +9,16 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public class FarmerRequestDTO {
 
-    @NotBlank(message = "Name is required")
+    @NotBlank
     private String name;
 
-    @NotNull(message = "Phone number is required")
+    @NotNull
     private String phoneNumber;
 
-    @NotNull(message = "Address is required")
+    @NotNull
     private String address;
 
-    @NotNull(message = "Status is required")
+    @NotNull
     private Status status;
 
 }

@@ -13,8 +13,6 @@ import java.util.List;
         @UniqueConstraint(columnNames = "number")
 })
 @Data
-//@ToString(exclude = {"farmer", "trader", "vehicle", "itemDetails"})
-//@EqualsAndHashCode(exclude = {"farmer", "trader", "vehicle", "itemDetails"})
 public class LoadWeight {
 
     @Id

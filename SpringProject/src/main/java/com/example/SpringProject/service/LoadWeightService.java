@@ -63,7 +63,7 @@ public class LoadWeightService {
             return dto;
         }).collect(Collectors.toList());
         responseDTO.setItemDetails(itemDTOs);
-
+        //itemdetail net weight
         double totalNetWeight = itemDTOs.stream()
                 .mapToDouble(i -> i.getValue() * i.getCount())
                 .sum();
@@ -165,7 +165,7 @@ public class LoadWeightService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No data found for vehicle number: " + vehicleNumber);
         }
         return loadWeights.stream()
-                .map(this::convertToResponseDTO)
+                .map(this::convertToResponseDTO)//convertToResponseDTO(loadWeights)
                 .collect(Collectors.toList());
     }
 }

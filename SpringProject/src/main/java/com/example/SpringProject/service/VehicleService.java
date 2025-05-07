@@ -19,7 +19,7 @@ public class VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
 
-    // Vehicle entity to VehicleResponseDTO
+    //entity to responseDTO
     private VehicleResponseDTO convertToResponseDTO(Vehicle vehicle) {
         VehicleResponseDTO responseDTO = new VehicleResponseDTO();
         responseDTO.setVehicleId(vehicle.getVehicleId());

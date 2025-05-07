@@ -20,6 +20,7 @@ public class FarmerService {
     private FarmerRepository farmerRepository;
 
     private FarmerResponseDTO convertToResponseDTO(Farmer farmer) {
+        //request to entity(since entity is the one that communicates with the db)
         FarmerResponseDTO responseDTO = new FarmerResponseDTO();
         responseDTO.setId(farmer.getId());
         responseDTO.setName(farmer.getName());
@@ -38,6 +39,7 @@ public class FarmerService {
         farmer.setAddress(farmerRequestDTO.getAddress());
         farmer.setStatus(farmerRequestDTO.getStatus());
         Farmer savedFarmer = farmerRepository.save(farmer);
+        //saved entity to response
         return convertToResponseDTO(savedFarmer);
     }
 

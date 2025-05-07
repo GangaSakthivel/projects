@@ -23,7 +23,6 @@ public class ItemDetailService {
     @Autowired
     private LoadWeightRepository loadWeightRepository;
 
-    // Helper method to convert ItemDetail entity to ItemDetailResponseDTO
     private ItemDetailResponseDTO convertToResponseDTO(ItemDetail itemDetail) {
         ItemDetailResponseDTO responseDTO = new ItemDetailResponseDTO();
         responseDTO.setId(itemDetail.getId());
@@ -32,9 +31,7 @@ public class ItemDetailService {
         return responseDTO;
     }
 
-    // POST: Create a new ItemDetail
-    public ItemDetailResponseDTO createItemDetail(ItemDetailRequestDTO itemDetailRequestDTO, Long loadWeightId) { // Added loadWeightId
-        // Fetch the LoadWeight, handle exceptions.
+    public ItemDetailResponseDTO createItemDetail(ItemDetailRequestDTO itemDetailRequestDTO, Long loadWeightId) {
         LoadWeight loadWeight = loadWeightRepository.findById(loadWeightId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "LoadWeight not found with id: " + loadWeightId));
 
@@ -47,7 +44,6 @@ public class ItemDetailService {
         return convertToResponseDTO(savedItemDetail);
     }
 
-    // GET: Get all ItemDetails
     public List<ItemDetailResponseDTO> getAllItemDetails() {
         List<ItemDetail> itemDetails = itemDetailRepository.findAll();
         return itemDetails.stream()
