@@ -1,10 +1,12 @@
 package com.example.UserAuthenticationSpring.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class LoginRequestDTO {
-    private Long loginId;
+    private Long phoneNumber;
     private String password;
 
 }

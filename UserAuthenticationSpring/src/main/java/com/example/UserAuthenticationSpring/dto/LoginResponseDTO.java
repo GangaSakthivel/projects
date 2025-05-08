@@ -1,11 +1,12 @@
 package com.example.UserAuthenticationSpring.dto;
 
+import lombok.*;
 
-import lombok.Data;
-
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginResponseDTO {
-    private int status;
-    private String message;
-    private LoginDataDTO data;
+    private Long userId;
+    private String token;
 }
