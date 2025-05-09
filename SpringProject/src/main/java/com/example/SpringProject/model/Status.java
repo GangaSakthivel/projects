@@ -4,26 +4,30 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Status {
-    ACTIVE("ACTIVE"), INACTIVE("INACTIVE");
 
-    private final String value;
+    ACTIVE,
+    INACTIVE
 
-    Status(String value) {
-        this.value = value;
-    }
+    //ACTIVE("ACTIVE"), INACTIVE("INACTIVE");
 
-    @JsonValue
-    public String getValue() {
-        return value;
-    }
-
-    @JsonCreator
-    public static Status fromValue(String text) {
-        for (Status status : Status.values()) {
-            if (status.value.equalsIgnoreCase(text)) {
-                return status;
-            }
-        }
-        throw new IllegalArgumentException("Invalid Status value: " + text);
-    }
+//    private final String value;
+//
+//    Status(String value) {
+//        this.value = value;
+//    }
+//
+//    @JsonValue
+//    public String getValue() {
+//        return value;
+//    }
+//
+//    @JsonCreator
+//    public static Status fromValue(String text) {
+//        for (Status status : Status.values()) {
+//            if (status.value.equalsIgnoreCase(text)) {
+//                return status;
+//            }
+//        }
+//        throw new IllegalArgumentException("Invalid Status value: " + text);
+//    }
 }
