@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Date;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -27,6 +28,7 @@ public class JwtUtil {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
@@ -67,6 +69,20 @@ public class JwtUtil {
         }
     }
 
+    public Set<String> extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        Object rolesObject = claims.get("roles");
+
+        if (rolesObject instanceof List<?>) {
+            List<?> rolesList = (List<?>) rolesObject;
+            return rolesList.stream()
+                    .filter(role -> role instanceof String)
+                    .map(role -> (String) role)
+                    .collect(Collectors.toSet());
+        }
+
+        return Collections.emptySet();
+    }
 
 
 
