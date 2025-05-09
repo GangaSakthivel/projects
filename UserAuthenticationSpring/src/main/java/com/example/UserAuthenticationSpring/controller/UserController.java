@@ -18,13 +18,11 @@ public class UserController {
     @Value("${role.user:ROLE_USER}")
     private String roleUser;
 
-    @Value("${role.admin:ROLE_ADMIN}")
-    private String roleAdmin;
-
     @GetMapping("/protected/data")
     public ResponseEntity<String> extractAuthorization(@RequestHeader("Authorization") String token) {
         String jwtToken = null;
 
+        // Check if the token exists and starts with "Bearer "
         if (token != null && token.startsWith("Bearer ")) {
             jwtToken = token.substring(7); // Remove "Bearer " prefix
         } else {
@@ -32,13 +30,13 @@ public class UserController {
         }
 
         try {
-            String username = jwtUtil.extractUsername(jwtToken);
+            // Extract phone number from JWT token
+            String phoneNumber = jwtUtil.extractPhoneNumber(jwtToken);
             Set<String> roles = jwtUtil.extractRoles(jwtToken);
 
-            if (roles.contains(roleAdmin)) {
-                return ResponseEntity.ok("Welcome " + username + ", here is the admin specific data.");
-            } else if (roles.contains(roleUser)) {
-                return ResponseEntity.ok("Welcome " + username + ", here is the user specific data.");
+            // Check if user has the USER role
+            if (roles.contains(roleUser)) {
+                return ResponseEntity.ok("Welcome " + phoneNumber + ", here is the user-specific data.");
             } else {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied: You don't have the necessary role.");
             }
