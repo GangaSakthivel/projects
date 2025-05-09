@@ -1,5 +1,7 @@
 package com.example.UserAuthenticationSpring.security;
 
+import com.example.UserAuthenticationSpring.model.Role;
+import com.example.UserAuthenticationSpring.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,14 +40,29 @@ public class JwtUtil {
                 .getBody();
     }
 
-    public String generateToken(String username) {
+//    public String generateToken(String username) {
+//        return Jwts.builder()
+//                .setSubject(username)
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+//                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+//                .compact();
+//    }
+
+    public String generateToken(User user) {
+        List<String> roleNames = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
+
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(user.getUserName())
+                .claim("roles", roleNames)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public boolean validateToken(String token, String username) {
         final String extractedUsername = extractUsername(token);

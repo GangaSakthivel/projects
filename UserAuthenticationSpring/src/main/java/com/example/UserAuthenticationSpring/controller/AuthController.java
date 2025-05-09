@@ -73,7 +73,11 @@ public class AuthController {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication); // Set the authentication in the context
 
-            String token = util.generateToken(loginRequest.getUserName());
+            //String token = util.generateToken(loginRequest.getUserName());
+            User user = userRepository.findByUserName(loginRequest.getUserName())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            String token = util.generateToken(user);
+
             return ResponseEntity.ok(token);
         } catch (AuthenticationException e) {
             return ResponseEntity.status(401).body("Invalid credentials"); // Handle authentication failure
