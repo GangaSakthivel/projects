@@ -1,8 +1,10 @@
 package com.example.UserAuthenticationSpring.dto;
 
 import com.example.UserAuthenticationSpring.model.Status;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
 
 import java.util.Set;
 
@@ -12,6 +14,7 @@ public class RegistrationRequest {
     @NotBlank
     private String userName;
     @NotNull
+    @Column(unique = true, nullable = false)
     private String phoneNumber;
     private Double salary;
     private Status status;

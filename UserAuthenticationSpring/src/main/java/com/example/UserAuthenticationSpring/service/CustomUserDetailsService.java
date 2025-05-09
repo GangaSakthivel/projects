@@ -23,13 +23,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByPhoneNumber(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+        User user = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + phoneNumber));
 
         //map roles to authorities
         return new org.springframework.security.core.userdetails.User(
-                user.getUserName(),
+                user.getPhoneNumber(),
                 user.getPassword(),
 //                user.getStatus() == Status.ACTIVE, // enabled based on status
 //                true, // accountNonExpired (default)

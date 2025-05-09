@@ -46,6 +46,9 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Phone number already exists.");
         }
 
+
+        //request dto to entity (user)
+
         // Create user and set properties
         User newUser = new User();
         newUser.setUserName(registrationRequest.getUserName());
@@ -82,7 +85,7 @@ public class AuthController {
 
             //String token = util.generateToken(loginRequest.getUserName());
             User user = userRepository.findByPhoneNumber(loginRequest.getPhoneNumber())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseThrow(() -> new RuntimeException("Not found"));
             String token = util.generateToken(user);
 
             return ResponseEntity.ok(token);

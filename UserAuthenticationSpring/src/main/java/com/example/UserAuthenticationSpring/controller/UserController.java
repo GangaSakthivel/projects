@@ -15,14 +15,13 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Value("${role.user:ROLE_USER}")
+    @Value("${role.user:ROLE_USER}")//used to inject a value into a field, method, constructor parameter.
     private String roleUser;
 
     @GetMapping("/protected/data")
     public ResponseEntity<String> extractAuthorization(@RequestHeader("Authorization") String token) {
         String jwtToken = null;
 
-        // Check if the token exists and starts with "Bearer "
         if (token != null && token.startsWith("Bearer ")) {
             jwtToken = token.substring(7); // Remove "Bearer " prefix
         } else {
@@ -36,9 +35,9 @@ public class UserController {
 
             // Check if user has the USER role
             if (roles.contains(roleUser)) {
-                return ResponseEntity.ok("Welcome " + phoneNumber + ", here is the user-specific data.");
+                return ResponseEntity.ok("Authorized " + phoneNumber);
             } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied: You don't have the necessary role.");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token validation failed: " + e.getMessage());
