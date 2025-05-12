@@ -2,9 +2,18 @@ package com.example.DocumentManagementSystem.model;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "documents")
 public class Document {
@@ -14,7 +23,8 @@ public class Document {
     private Long id;
     private String fileName;
     private String fileType;
-    private Time uploadTime;
+    private Long fileSize;
+    private LocalDateTime uploadTime;
     @Lob
     private byte[] fileData;
 
