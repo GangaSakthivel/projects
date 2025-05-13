@@ -23,26 +23,46 @@ public class User {
     private Long id;
     private String userName;
     private String phoneNumber;
+    private String email;
+    private String address;
     private Double salary;
+    @Enumerated(EnumType.STRING)
+    private SalaryType salaryType;
     @Enumerated(EnumType.STRING)
     private Status status;
     private String password;
+    private String notes;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Role> roles = new HashSet<>(); //many users can have multiple roles
 
+    @Lob
+    //@Column(name = "employee_photo", columnDefinition = "bytea")
+   // @Basic(fetch = FetchType.LAZY)
+    private byte[] employeePhoto;
+//
+    @Lob
+//    @Column(columnDefinition = "bytea")
+//    @Basic(fetch = FetchType.LAZY)
+    private byte[] document;
 
     public User() {
     }
 
-    public User(Long id, String userName, String phoneNumber, Double salary, Status status, String password, Set<Role> roles) {
+    public User(Long id, String userName, String phoneNumber, String email, String address, Double salary, SalaryType salaryType, Status status, String password, String notes, Set<Role> roles, byte[] employeePhoto, byte[] document) {
         this.id = id;
         this.userName = userName;
         this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.address = address;
         this.salary = salary;
+        this.salaryType = salaryType;
         this.status = status;
         this.password = password;
+        this.notes = notes;
         this.roles = roles;
+        this.employeePhoto = employeePhoto;
+        this.document = document;
     }
 
     public Long getId() {
@@ -69,12 +89,36 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public Double getSalary() {
         return salary;
     }
 
     public void setSalary(Double salary) {
         this.salary = salary;
+    }
+
+    public SalaryType getSalaryType() {
+        return salaryType;
+    }
+
+    public void setSalaryType(SalaryType salaryType) {
+        this.salaryType = salaryType;
     }
 
     public Status getStatus() {
@@ -93,12 +137,36 @@ public class User {
         this.password = password;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public byte[] getEmployeePhoto() {
+        return employeePhoto;
+    }
+
+    public void setEmployeePhoto(byte[] employeePhoto) {
+        this.employeePhoto = employeePhoto;
+    }
+
+    public byte[] getDocument() {
+        return document;
+    }
+
+    public void setDocument(byte[] document) {
+        this.document = document;
     }
 
     //Employee ID (Auto generated),
