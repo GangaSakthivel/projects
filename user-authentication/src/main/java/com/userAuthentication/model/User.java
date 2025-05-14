@@ -2,31 +2,59 @@ package com.userAuthentication.model;
 
 
 import com.userAuthentication.enums.SalaryType;
-import com.userAuthentication.enums.Status;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
-import org.springframework.web.bind.annotation.RequestMapping;
+import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "user_name", nullable = false)
     private String userName;
-    private List<Role> roles;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private Set<Role> roles = new HashSet<>();
+
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
-    private String email;
+
+    @Column(name = "user_email")//if nullable not mentioned then its considered as null by default by jpa
+    private String userEmail;
+
+    @Column(name = "salary_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private SalaryType salaryType;
+
+    @Column(name = "salary", nullable = false)
     private Double salary;
+
+    @Column(name = "user_address", nullable = false)
     private String address;
-    @Enumerated(EnumType.STRING)
-    private Status status;
-    private byte[] employeePhoto;
+
+    @Column(name = "user_active_or_inactive")
+    private boolean status;
+
+    @Lob
+    @Column(name = "user_photo", columnDefinition = "BYTEA")//this is null by default
+    private byte[] photo;
+
+    @Lob
+    @Column(name = "user_document", columnDefinition = "BYTEA")
+    private byte[] document;
+
+    @Column(name = "user_password", nullable = false)
+    private String password;
+
+    @Column(name = "notes") //nullable by default
+    private String notes;
+
+
 
 
 
