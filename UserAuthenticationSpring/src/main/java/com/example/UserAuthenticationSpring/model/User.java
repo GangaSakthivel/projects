@@ -10,10 +10,7 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -36,14 +33,10 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Role> roles = new HashSet<>(); //many users can have multiple roles
 
-    @Lob
-    //@Column(name = "employee_photo", columnDefinition = "bytea")
-   // @Basic(fetch = FetchType.LAZY)
+    @Column(name = "employee_photo", columnDefinition = "BYTEA", nullable = true)
     private byte[] employeePhoto;
-//
-    @Lob
-//    @Column(columnDefinition = "bytea")
-//    @Basic(fetch = FetchType.LAZY)
+
+    @Column(name = "document", columnDefinition = "BYTEA", nullable = true)
     private byte[] document;
 
     public User() {

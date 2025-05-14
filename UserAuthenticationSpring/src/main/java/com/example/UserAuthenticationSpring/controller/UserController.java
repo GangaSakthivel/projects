@@ -29,11 +29,9 @@ public class UserController {
         }
 
         try {
-            // Extract phone number from JWT token
             String phoneNumber = jwtUtil.extractPhoneNumber(jwtToken);
             Set<String> roles = jwtUtil.extractRoles(jwtToken);
 
-            // Check if user has the USER role
             if (roles.contains(roleUser)) {
                 return ResponseEntity.ok("Authorized " + phoneNumber);
             } else {

@@ -40,18 +40,18 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-
-
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/register", consumes = { "multipart/form-data" })
     public ResponseEntity<String> register(
             @ModelAttribute RegistrationRequest registrationRequest,
-            @RequestParam(value = "employeePhoto", required = false) MultipartFile employeePhotoFile,
-            @RequestParam(value = "document", required = false) MultipartFile documentFile) throws IOException {
+            @RequestParam(required = false) MultipartFile employeePhotoFile,
+            @RequestParam(required = false) MultipartFile documentFile) throws IOException {
 
+        // Check if the phone number already exists in the database
         if (userRepository.findByPhoneNumber(registrationRequest.getPhoneNumber()).isPresent()) {
             return ResponseEntity.badRequest().body("Phone number already exists.");
         }
 
+        // Create a new User object
         User newUser = new User();
         newUser.setUserName(registrationRequest.getUserName());
         newUser.setPhoneNumber(registrationRequest.getPhoneNumber());
@@ -63,6 +63,7 @@ public class AuthController {
         newUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
         newUser.setNotes(registrationRequest.getNotes());
 
+        // Assign roles to the user
         Set<Role> roles = new HashSet<>();
         if (registrationRequest.getRoles() != null) {
             for (String roleName : registrationRequest.getRoles()) {
@@ -73,20 +74,35 @@ public class AuthController {
         }
         newUser.setRoles(roles);
 
+        // Handle file uploads (photo and document)
         if (employeePhotoFile != null && !employeePhotoFile.isEmpty()) {
-            newUser.setEmployeePhoto(employeePhotoFile.getBytes());
+            try {
+                // Convert the uploaded MultipartFile to byte array
+                byte[] photoData = employeePhotoFile.getBytes();
+
+                // Store the byte array into the entity (assuming employeePhoto is bytea in the database)
+                newUser.setEmployeePhoto(photoData);
+            } catch (IOException e) {
+                // Handle any exception that occurs during file processing
+                throw new RuntimeException("Error while processing the photo", e);
+            }
         }
 
         if (documentFile != null && !documentFile.isEmpty()) {
+            try {
                 byte[] documentBytes = documentFile.getBytes();
                 newUser.setDocument(documentBytes);
+            } catch (IOException e) {
+                throw new RuntimeException("Error while processing the document", e);
             }
+        }
 
-
+        // Save the new user to the database
         userRepository.save(newUser);
+
+        // Return success message
         return ResponseEntity.ok("User registered successfully.");
     }
-
 
     //login
     @PostMapping("/login")

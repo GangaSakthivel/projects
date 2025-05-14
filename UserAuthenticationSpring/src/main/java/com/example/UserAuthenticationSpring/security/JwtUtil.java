@@ -23,7 +23,7 @@ public class JwtUtil {
     }
 
     public String extractPhoneNumber(String token) {
-        return extractClaim(token, Claims::getSubject);  // Get the phone number (subject) from the token
+        return extractClaim(token, Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

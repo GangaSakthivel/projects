@@ -3,15 +3,9 @@ package com.example.UserAuthenticationSpring.dto;
 import com.example.UserAuthenticationSpring.model.SalaryType;
 import com.example.UserAuthenticationSpring.model.Status;
 import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.util.Set;
 
@@ -52,7 +46,7 @@ public class RegistrationRequest {
         this.password = password;
         this.notes = notes;
         this.employeePhoto = employeePhoto;
-       this.document = document;
+        this.document = document;
         this.roles = roles;
     }
 
