@@ -2,7 +2,6 @@ package com.userAuthentication.dto;
 
 import com.userAuthentication.enums.SalaryType;
 import com.userAuthentication.model.Role;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

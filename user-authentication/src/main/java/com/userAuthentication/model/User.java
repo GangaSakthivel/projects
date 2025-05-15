@@ -18,17 +18,14 @@ public class User {
     @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    private Set<Role> roles = new HashSet<>();
-
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
     @Column(name = "user_email")//if nullable not mentioned then its considered as null by default by jpa
     private String userEmail;
 
-    @Column(name = "salary_type", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "salary_type", nullable = false)
     private SalaryType salaryType;
 
     @Column(name = "salary", nullable = false)
@@ -53,6 +50,14 @@ public class User {
 
     @Column(name = "notes") //nullable by default
     private String notes;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+//    @JoinTable(
+//            name = "users_roles",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id")
+//    )
+    private Set<Role> roles = new HashSet<>();
 
 
 

@@ -1,4 +1,4 @@
 package com.userAuthentication.repository;
 
-public interface RoleRepository {
+public interface UserRepository {
 }
