@@ -1,7 +1,6 @@
 package com.userAuthentication.dto;
 
 import com.userAuthentication.enums.SalaryType;
-import com.userAuthentication.model.Role;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;

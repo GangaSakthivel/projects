@@ -2,7 +2,6 @@ package com.userAuthentication.service;
 
 import com.userAuthentication.dto.UserRequestDTO;
 import com.userAuthentication.dto.UserResponseDTO;
-import com.userAuthentication.model.Role;
 import com.userAuthentication.model.User;
 import com.userAuthentication.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
