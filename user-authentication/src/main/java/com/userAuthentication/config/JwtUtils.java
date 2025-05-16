@@ -1,7 +1,5 @@
 package com.userAuthentication.config;
 
-import com.userAuthentication.model.Role;
-import com.userAuthentication.model.User;
 import com.userAuthentication.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,12 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.Collections;
 
 @Component
 public class JwtUtils {
@@ -32,7 +30,7 @@ public class JwtUtils {
     private String secret_key;
 
     @Value("${jwt.expiration}")
-    private Long jwtExpiration; // Expecting expiration in milliseconds
+    private Long jwtExpiration;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret_key.getBytes());
