@@ -1,9 +1,9 @@
 package com.userAuthentication.config;
 
-
 import com.userAuthentication.model.Role;
 import com.userAuthentication.model.User;
 import com.userAuthentication.repository.UserRepository;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -14,7 +14,10 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.Collections;
 
 @Component
 public class JwtUtils {
@@ -25,19 +28,22 @@ public class JwtUtils {
         this.userRepository = userRepository;
     }
 
-
     @Value("${jwt.secret}")
     private String secret_key;
 
-    @Value("${jwt.expirationMs}")
-    private Long jwtExpiration;
+    @Value("${jwt.expiration}")
+    private Long jwtExpiration; // Expecting expiration in milliseconds
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        return Keys.hmacShaKeyFor(secret_key.getBytes());
     }
 
     public String extractPhoneNumber(String token) {
-        return extractClaim(token, Claims::getSubject);
+        try {
+            return extractClaim(token, Claims::getSubject);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -53,23 +59,23 @@ public class JwtUtils {
                 .getBody();
     }
 
-    public String generateToken(User user) {
-        List<String> roleNames = user.getRoles().stream()
-                .map(Role::getRoleName)
+    public String generateToken(UserDetails userDetails) {
+        List<String> roleNames = userDetails.getAuthorities().stream()
+                .map(authority -> authority.getAuthority().replace("ROLE_", ""))
                 .collect(Collectors.toList());
 
         return Jwts.builder()
-                .setSubject(user.getPhoneNumber())
+                .setSubject(userDetails.getUsername()) // UserDetails.getUsername() should return the phoneNumber
                 .claim("roles", roleNames)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public boolean validateToken(String token, String phoneNumber) {
-        final String extractedPhoneNumber = extractPhoneNumber(token);  // Extract phone number from the token
-        return extractedPhoneNumber.equals(phoneNumber) && !isTokenExpired(token);
+    public boolean isTokenValid(String token, String phoneNumber) {
+        final String extractedPhoneNumber = extractPhoneNumber(token);
+        return (extractedPhoneNumber != null && extractedPhoneNumber.equals(phoneNumber)) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
@@ -82,30 +88,37 @@ public class JwtUtils {
 
     public boolean isTokenValid(String token) {
         try {
-            String phoneNumber = extractPhoneNumber(token); // Extract phone number from the token
-            return validateToken(token, phoneNumber); // Validate token using the extracted phone number
+            return !isTokenExpired(token);
         } catch (Exception e) {
-            return false; // If any error occurs, treat the token as invalid
+            return false;
         }
     }
 
     public Set<String> extractRoles(String token) {
-        Claims claims = extractAllClaims(token);
-        Object rolesObject = claims.get("roles");
+        try {
+            Claims claims = extractAllClaims(token);
+            Object rolesObject = claims.get("roles");
 
-        if (rolesObject instanceof List<?>) {
-            List<?> rolesList = (List<?>) rolesObject;
-            return rolesList.stream()
-                    .filter(role -> role instanceof String)
-                    .map(role -> (String) role)
-                    .collect(Collectors.toSet());
+            if (rolesObject instanceof List<?>) {
+                List<?> rolesList = (List<?>) rolesObject;
+                return rolesList.stream()
+                        .filter(role -> role instanceof String)
+                        .map(role -> (String) role)
+                        .collect(Collectors.toSet());
+            }
+        } catch (Exception e) {
+            return Collections.emptySet();
         }
-
         return Collections.emptySet();
     }
 
+    public boolean validateToken(String token, String username) {
+        final String extractedUsername = extractUsername(token);
+        return (extractedUsername != null && extractedUsername.equals(username) && !isTokenExpired(token));
+    }
 
-
-
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
 
 }
