@@ -6,10 +6,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
 
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
 
 
@@ -22,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
-        User user = UserRepository.findByPhoneNumber(phoneNumber)
+        User user = userRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(()-> new UsernameNotFoundException("User not found with" + phoneNumber));
 
         return new org.springframework.security.core.userdetails.User(
